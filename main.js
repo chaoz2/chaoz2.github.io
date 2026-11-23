@@ -413,7 +413,7 @@
       draw();
     });
 
-    // ☢ nuke: a shockwave from the center wipes out everything it touches
+    // 💥 the bomb: a shockwave from the center wipes out everything it touches
     const NUKE_MS = 750;
     function detonate() {
       if (!cols || nuke) return;
@@ -431,7 +431,7 @@
       nuke = null;
       gen = 0;
       holdUntil = ts + 300;
-      toast("☢ wasteland");
+      toast("💥 boom");
       draw();
     }
     function nukeFrame(ts) {
@@ -509,49 +509,109 @@
       buddy.classList.add("jump");
       if (Math.random() < 0.5 || lineIdx === 2) life.sneeze();
     });
-    // Tile throws the bomb: arc into the board, boom, brace, quip, new bomb
+    // the cartoon bomb in the board's corner: click to launch — it climbs, flips nose-down and falls onto the board (Tile just reacts)
     const bomb = $("#bomb");
     const BOOM = {
-      en: ["kaboom!", "oops.", "worth it.", "…did I do that?", "nuclear option: used."],
-      zh: ["轰！", "哎呀。", "值了。", "……是我干的吗？", "终极手段：已使用。"],
+      en: ["kaboom!", "oops.", "worth it.", "…did I do that?", "bomb: delivered."],
+      zh: ["轰！", "哎呀。", "值了。", "……是我干的吗？", "炸弹：已送达。"],
     };
-    let flying = false, flight = null;
-    bomb.addEventListener("click", () => {
+    let flying = false, flight = null, trailT = null;
+    const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+
+    function place() {
+      bomb.classList.remove("gone", "armed", "placed");
+      void bomb.offsetWidth;
+      bomb.classList.add("placed");
+      setTimeout(() => bomb.classList.remove("placed"), 650);
+    }
+    function puffAt(x, y, opts = {}) {
+      const p = document.createElement("span");
+      p.className = "puff";
+      p.style.left = x + "px";
+      p.style.top = y + "px";
+      p.style.setProperty("--dx", (opts.dx ?? (Math.random() - 0.5) * 18) + "px");
+      p.style.setProperty("--dy", (opts.dy ?? -8 - Math.random() * 12) + "px");
+      p.style.setProperty("--grow", opts.grow ?? 2.2 + Math.random() * 1.2);
+      p.style.setProperty("--life", (opts.life ?? 0.7 + Math.random() * 0.4) + "s");
+      if (opts.size) { p.style.width = p.style.height = opts.size + "px"; p.style.margin = -opts.size / 2 + "px 0 0 " + -opts.size / 2 + "px"; }
+      document.body.appendChild(p);
+      p.addEventListener("animationend", () => p.remove());
+    }
+    function tail() {
+      // bottom of the fins in viewport coords, following the bomb's current rotation
+      const r = bomb.getBoundingClientRect();
+      const tr = getComputedStyle(bomb).transform;
+      const m = tr && tr !== "none" ? new DOMMatrix(tr) : new DOMMatrix();
+      const half = 28;
+      return { x: r.left + r.width / 2 - m.b * half, y: r.top + r.height / 2 + m.a * half };
+    }
+
+    bomb.addEventListener("click", async () => {
       if (flying) return;
       flying = true;
-      bubble.classList.remove("show");
       const cv = $("#life");
+      if (reduceMotion || !bomb.animate) {
+        bomb.classList.add("gone");
+        life.detonate();
+        await wait(900);
+        say(pick(BOOM[lang()]));
+        place();
+        flying = false;
+        return;
+      }
+      // engine sputters on the pad; Tile gets nervous
+      bomb.classList.add("armed");
+      buddy.classList.add("brace");
+      for (let k = 0; k < 7; k++) { const t = tail(); puffAt(t.x, t.y, { dy: -2, size: 8, life: 0.6 }); await wait(140); }
+      // ignition: smoke billows out sideways
+      bomb.classList.remove("armed");
+      bomb.classList.add("launching");
+      const base = tail();
+      for (let i = 0; i < 14; i++) {
+        const side = i % 2 ? 1 : -1;
+        puffAt(base.x, base.y, { dx: side * (18 + Math.random() * 36), dy: -2 - Math.random() * 10, size: 12 + Math.random() * 10, life: 1 + Math.random() * 0.5 });
+      }
+      await wait(200);
+      // liftoff → climb → engine cutoff → flip nose-down → fall onto the board
       const b = bomb.getBoundingClientRect(), c = cv.getBoundingClientRect();
       const dx = c.left + c.width / 2 - (b.left + b.width / 2);
       const dy = c.top + c.height / 2 - (b.top + b.height / 2);
-      buddy.classList.remove("throw");
-      void buddy.offsetWidth;
-      buddy.classList.add("throw");
-      const impact = () => {
-        bomb.classList.add("gone");
-        buddy.classList.add("brace");
-        life.detonate();
-        setTimeout(() => {
-          buddy.classList.remove("brace", "throw");
-          say(pick(BOOM[lang()]));
-          if (flight) { flight.cancel(); flight = null; }
-          bomb.classList.remove("gone");
-          bomb.classList.add("respawn");
-          setTimeout(() => { bomb.classList.remove("respawn"); flying = false; }, 520);
-        }, 1050);
-      };
-      if (reduceMotion || !bomb.animate) return impact();
+      const DUR = 2000;
       flight = bomb.animate(
         [
-          { transform: "translate(0, 0) rotate(0deg) scale(1)" },
-          { transform: `translate(${dx * 0.08}px, ${-46}px) rotate(-40deg) scale(1.1)`, offset: 0.18 },
-          { transform: `translate(${dx * 0.5}px, ${dy * 0.5 - 90}px) rotate(-220deg) scale(1.15)`, offset: 0.55 },
-          { transform: `translate(${dx}px, ${dy}px) rotate(-420deg) scale(0.55)` },
+          { transform: "translate(0, 0) rotate(0deg)", easing: "cubic-bezier(.6, 0, .9, .45)" },
+          { transform: "translate(0, -16px) rotate(0deg)", offset: 0.12, easing: "cubic-bezier(.3, .25, .6, 1)" },
+          { transform: `translate(${dx * 0.25}px, ${dy - 170}px) rotate(-22deg)`, offset: 0.44, easing: "ease-in-out" },
+          { transform: `translate(${dx * 0.6}px, ${dy - 205}px) rotate(-125deg)`, offset: 0.62, easing: "cubic-bezier(.5, 0, .85, .6)" },
+          { transform: `translate(${dx}px, ${dy}px) rotate(-180deg) scale(0.92)` },
         ],
-        { duration: 820, easing: "cubic-bezier(.42, 0, .62, 1)", fill: "forwards" }
+        { duration: DUR, fill: "forwards" }
       );
-      flight.onfinish = impact;
+      const cutoff = setTimeout(() => bomb.classList.remove("launching"), DUR * 0.52);
+      trailT = setInterval(() => { const t = tail(); puffAt(t.x, t.y, { size: 10, life: 0.8 }); }, 40);
+      await flight.finished.catch(() => {});
+      clearTimeout(cutoff);
+      clearInterval(trailT);
+      bomb.classList.remove("launching");
+      // BOOM
+      bomb.classList.add("gone");
+      const flash = document.createElement("div");
+      flash.className = "flash";
+      document.body.appendChild(flash);
+      flash.addEventListener("animationend", () => flash.remove());
+      life.detonate();
+      await wait(1100);
+      buddy.classList.remove("brace");
+      say(pick(BOOM[lang()]));
+      flight.cancel();
+      flight = null;
+      await wait(700);
+      place();
+      await wait(650);
+      flying = false;
     });
+    // Tile sets the bomb down shortly after arriving
+    setTimeout(place, 2600);
 
     // a little hello shortly after load
     setTimeout(() => { lineIdx = 0; say(BUDDY_LINES[lang()][0]); }, 1600);

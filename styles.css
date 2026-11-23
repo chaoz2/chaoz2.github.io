@@ -271,7 +271,7 @@ strong { font-weight: 650; color: var(--ink); }
 }
 .life-card .dot { width: 8px; height: 8px; border-radius: 3px; background: var(--mint); animation: pulse 2s ease-in-out infinite; }
 @keyframes pulse { 50% { opacity: 0.35; } }
-.gen { margin-left: auto; font-family: var(--mono); font-size: 12.5px; color: var(--ink-3); }
+.gen { margin-left: auto; margin-right: 30px; font-family: var(--mono); font-size: 12.5px; color: var(--ink-3); }
 .gen b { font-weight: 500; color: var(--ink-2); font-variant-numeric: tabular-nums; }
 .life-card.shake { animation: shake 0.5s cubic-bezier(.36, .07, .19, .97); }
 @keyframes shake {
@@ -312,34 +312,44 @@ strong { font-weight: 650; color: var(--ink); }
 @keyframes wobble { 25% { transform: rotate(-8deg); } 75% { transform: rotate(8deg); } }
 @keyframes jump { 40% { transform: translateY(-18px) scale(1.05, 0.95); } }
 .bubble {
-  position: absolute; top: -62px; right: 156px; z-index: 3; max-width: min(260px, 60vw);
+  position: absolute; top: -58px; right: 108px; z-index: 5; max-width: min(260px, 60vw);
   background: var(--ink); color: var(--bg); font-size: 13.5px; font-weight: 600; line-height: 1.4;
   padding: 9px 13px; border-radius: 14px 14px 4px 14px;
   opacity: 0; transform: translateY(6px) scale(0.95); transform-origin: right bottom;
   transition: opacity 0.25s, transform 0.3s cubic-bezier(.3, 1.6, .5, 1); pointer-events: none;
 }
 .bubble.show { opacity: 1; transform: none; }
-/* Tile's arm + the bomb it's holding */
-.buddy .arm {
-  position: absolute; left: -9px; top: 31px; width: 15px; height: 7px; border-radius: 4px;
-  background: var(--coral); box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.12); transform: rotate(14deg);
-}
+/* the cartoon bomb, standing nose-up in the card's bottom-right corner */
 .bomb {
-  position: absolute; top: -34px; right: 86px; z-index: 4; width: 58px; height: 33px; padding: 0;
-  border: 0; background: none; cursor: pointer; transform-origin: 60% 50%;
-  animation: idle 3.2s ease-in-out infinite; filter: drop-shadow(0 4px 4px rgba(0, 0, 0, 0.3));
+  position: absolute; bottom: -10px; right: -12px; z-index: 4; width: 36px; height: 72px; padding: 0;
+  border: 0; background: none; cursor: pointer; transform-origin: 50% 50%;
+  filter: drop-shadow(0 5px 5px rgba(0, 0, 0, 0.35));
 }
-.bomb svg { width: 100%; height: 100%; display: block; transform: rotate(-10deg); transition: transform 0.3s cubic-bezier(.3, 1.6, .5, 1); }
-.bomb:hover svg { transform: rotate(-22deg) translateX(-2px); }
-.bomb:hover .bomb-light, .bomb:focus-visible .bomb-light { animation: blinklight 0.35s steps(1) infinite; }
-.bomb-light { animation: blinklight 1.4s steps(1) infinite; }
-@keyframes blinklight { 50% { fill: #ffd166; } }
+.bomb svg { width: 100%; height: 100%; display: block; overflow: visible; }
+.bomb:hover:not(.armed):not(.launching) { animation: rattle 0.4s ease-in-out; }
+@keyframes rattle { 25% { transform: rotate(-6deg); } 75% { transform: rotate(6deg); } }
+.bomb .flame { opacity: 0; transform-box: fill-box; transform-origin: 50% 0%; transition: opacity 0.12s; }
+.bomb.armed { animation: rattle 0.12s linear infinite; }
+.bomb.armed .flame { opacity: 0.45; animation: flame 0.1s steps(2) infinite; }
+.bomb.launching .flame { opacity: 1; animation: flame 0.07s steps(2) infinite; }
+@keyframes flame { 50% { transform: scaleY(1.45) scaleX(0.85); } }
 .bomb.gone { opacity: 0; pointer-events: none; }
-.bomb.respawn { animation: respawn 0.5s cubic-bezier(.3, 1.6, .5, 1); }
-@keyframes respawn { from { transform: scale(0) rotate(-90deg); opacity: 0; } to { transform: none; opacity: 1; } }
+.bomb.placed { animation: placed 0.6s cubic-bezier(.3, 1.5, .5, 1); }
+@keyframes placed {
+  0% { transform: translate(0, -80px) rotate(-30deg) scale(0.7); opacity: 0; }
+  55% { transform: translate(0, 3px) scale(1.1, 0.88); opacity: 1; }
+  100% { transform: none; }
+}
+.puff {
+  position: fixed; z-index: 59; width: 16px; height: 16px; margin: -8px 0 0 -8px; border-radius: 50%; pointer-events: none;
+  background: radial-gradient(circle at 40% 35%, rgba(240, 238, 245, 0.95), rgba(160, 158, 172, 0.7));
+  animation: puff var(--life, 0.9s) ease-out forwards;
+}
+@keyframes puff { from { transform: translate(0, 0) scale(0.4); opacity: 0.95; } to { transform: translate(var(--dx, 0), var(--dy, -10px)) scale(var(--grow, 2.6)); opacity: 0; } }
+.flash { position: fixed; inset: 0; z-index: 70; pointer-events: none; background: #fff6dc; animation: flash 0.45s ease-out forwards; }
+@keyframes flash { from { opacity: 0.75; } to { opacity: 0; } }
 .buddy.throw { animation: throw 0.55s cubic-bezier(.3, 1.4, .5, 1); }
 @keyframes throw { 30% { transform: translateY(-14px) rotate(-14deg); } 60% { transform: translateY(-4px) rotate(8deg); } }
-.buddy.throw .arm { transform: rotate(-60deg) translate(-2px, -6px); transition: transform 0.15s; }
 .buddy.brace .eye { transform: scaleY(0.15); animation: none; }
 .buddy.brace .eye i { opacity: 0; }
 
