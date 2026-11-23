@@ -494,6 +494,10 @@ h2 { font-weight: 800; font-size: clamp(28px, 4vw, 42px); line-height: 1.12; mar
 .co-logo.sm svg { width: 19px; height: 19px; }
 .co-logo.sm.wide svg { width: 24px; height: 24px; }
 .co-logo.sm .mk { width: 21px; height: 21px; }
+.co-logo .mk-img { width: 22px; height: 22px; object-fit: contain; display: block; }
+.m.logo .mk-img { width: 66%; height: 66%; object-fit: contain; pointer-events: none; }
+:root[data-theme="dark"] .mk-img { filter: invert(1) brightness(0.95); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .mk-img { filter: invert(1) brightness(0.95); } }
 .co-logo[title="Rockset"] { color: #fff; }
 .edu .co-logo { color: var(--ink); }
 .co-logo.sm.cmu svg { width: 27px; height: 27px; }
