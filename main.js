@@ -331,7 +331,7 @@
     intel: { en: "Intel", zh: "Intel", c: "--c-intel" },
     cmu: { en: "Carnegie Mellon", zh: "卡内基梅隆", c: "--c-cmu" },
     uw: { en: "UW summer", zh: "华盛顿大学暑校", c: "--c-uw" },
-    sjtu: { en: "SJTU", zh: "上海交大", c: "--c-sjtu" },
+    sjtu: { en: "Shanghai Jiao Tong University", zh: "上海交通大学", c: "--c-sjtu" },
     hs: { en: "High school", zh: "山大附中", c: "--c-hs" },
   };
   // later entries paint over earlier ones; every overlapping label still shows up in the tooltip
@@ -365,9 +365,9 @@
   const heads = [];
   const gfrag = document.createDocumentFragment();
   // logos for the first tile of each company chapter, borrowed from the work cards
-  const LOGO_OF = { openai: "OpenAI", rockset: "Rockset", fb: "Facebook", intel: "Intel" };
+  const LOGO_OF = { openai: "OpenAI", rockset: "Rockset", fb: "Facebook", intel: "Intel", cmu: "CMU", sjtu: "SJTU", uw: "UW", hs: "HS" };
   const logoSvg = (k) => {
-    const src = LOGO_OF[k] && document.querySelector(`.co-logo[title="${LOGO_OF[k]}"] svg`);
+    const src = LOGO_OF[k] && document.querySelector(`.co-logo[title="${LOGO_OF[k]}"] > :first-child`);
     return src ? src.cloneNode(true) : null;
   };
   let pastMonths = 0, prevKey = null;
@@ -388,7 +388,8 @@
           el.dataset.k = k;
           el.style.setProperty("--c", `var(${KEYS[k].c})`);
           counts[k] = (counts[k] || 0) + 1;
-          if (k !== prevKey) {
+          const startsHere = PERIODS.some((p) => p[0] === k && idx(p[1]) === i);
+          if (k !== prevKey && startsHere) {
             const svg = logoSvg(k);
             if (svg) { el.classList.add("logo"); el.appendChild(svg); }
           }
