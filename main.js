@@ -27,6 +27,7 @@
     copied: { en: "copied ✓", zh: "已复制 ✓" },
     future: { en: "Not written yet.", zh: "还没写。" },
     gap: { en: "Between chapters. Packing boxes.", zh: "两章之间，在打包行李。" },
+    grad: { en: "Graduated from SJTU 🎓 Next stop: Carnegie Mellon.", zh: "上海交大毕业 🎓 下一站：卡内基梅隆。" },
     here: { en: "← you are here", zh: "← 你在这里" },
     yr: { en: " yr", zh: " 年" },
     mo: { en: " mo", zh: " 个月" },
@@ -353,6 +354,7 @@
   ];
   const MARKS = [];
 
+  const GRAD_MONTH = "2017-07";
   const today = new Date();
   const nowIdx = today.getFullYear() * 12 + today.getMonth();
   const idx = (s) => (s === "now" ? nowIdx : +s.slice(0, 4) * 12 + (+s.slice(5, 7) - 1));
@@ -396,6 +398,12 @@
           prevKey = k;
         } else {
           el.classList.add("gap");
+          if (i === idx(GRAD_MONTH)) {
+            el.classList.remove("gap");
+            el.classList.add("grad");
+            info.grad = true;
+            el.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5 1 8.6l11 5.1 8.6-4v5.6h1.8V8.6z"/><path d="M5.2 11.5v3.9c0 1.7 3 3.4 6.8 3.4s6.8-1.7 6.8-3.4v-3.9L12 14.7z"/></svg>';
+          }
           prevKey = null;
         }
         if (info.marks.length) el.classList.add("mark");
@@ -472,7 +480,8 @@
     b.textContent = zh ? `${info.y} 年 ${info.m + 1} 月` : `${MONTHS_EN[info.m]} ${info.y}`;
     tip.appendChild(b);
     let lines;
-    if (info.future) lines = [t("future")];
+    if (info.grad) lines = [t("grad")];
+    else if (info.future) lines = [t("future")];
     else {
       lines = info.hits.map((h) => (zh ? h[4] : h[3])).concat(info.marks.map((mk) => (zh ? mk[3] : mk[2])));
       if (!lines.length) lines = [t("gap")];
@@ -482,7 +491,7 @@
       if (n) tip.appendChild(document.createElement("br"));
       tip.appendChild(document.createTextNode(l));
     });
-    tip.style.setProperty("--c", el.dataset.k ? `var(${KEYS[el.dataset.k].c})` : "var(--ink-3)");
+    tip.style.setProperty("--c", el.dataset.k ? `var(${KEYS[el.dataset.k].c})` : info.grad ? "var(--butter)" : "var(--ink-3)");
     tip.hidden = false;
     const tw = tip.offsetWidth;
     tip.style.left = Math.min(Math.max(r.left + r.width / 2, tw / 2 + 8), window.innerWidth - tw / 2 - 8) + "px";
@@ -490,6 +499,15 @@
   }
   gridEl.addEventListener("pointerover", (e) => e.target._info && showTip(e.target));
   gridEl.addEventListener("pointerdown", (e) => e.target._info && showTip(e.target));
+  gridEl.addEventListener("click", (e) => {
+    const g = e.target.closest(".m.grad");
+    if (!g) return;
+    const r = g.getBoundingClientRect();
+    g.classList.remove("toss");
+    void g.offsetWidth;
+    g.classList.add("toss");
+    burst(r.left + r.width / 2, r.top + r.height / 2);
+  });
   gridEl.addEventListener("pointerleave", () => (tip.hidden = true));
   window.addEventListener("scroll", () => (tip.hidden = true), { passive: true });
 
@@ -947,6 +965,35 @@
       confetti();
     }
   });
+  function burst(x, y) {
+    if (reduceMotion) return;
+    const cv = $("#confetti");
+    const ctx = cv.getContext("2d");
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    cv.width = innerWidth * dpr;
+    cv.height = innerHeight * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const parts = Array.from({ length: 46 }, () => {
+      const a = -Math.PI / 2 + (Math.random() - 0.5) * 2.2, v = 3 + Math.random() * 5;
+      return { x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v, s: 5 + Math.random() * 7, r: Math.random() * 3, vr: (Math.random() - 0.5) * 0.4, c: PAL[pick(TILE_KEYS)] };
+    });
+    const start = performance.now();
+    (function frame(ts) {
+      const el = ts - start;
+      ctx.clearRect(0, 0, innerWidth, innerHeight);
+      ctx.globalAlpha = el > 900 ? Math.max(0, 1 - (el - 900) / 500) : 1;
+      parts.forEach((p) => {
+        p.x += p.vx; p.y += p.vy; p.vy += 0.22; p.r += p.vr;
+        ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.r); ctx.fillStyle = p.c;
+        if (ctx.roundRect) { ctx.beginPath(); ctx.roundRect(-p.s / 2, -p.s / 2, p.s, p.s, p.s * 0.28); ctx.fill(); }
+        else ctx.fillRect(-p.s / 2, -p.s / 2, p.s, p.s);
+        ctx.restore();
+      });
+      if (el < 1400) requestAnimationFrame(frame);
+      else ctx.clearRect(0, 0, innerWidth, innerHeight);
+    })(start);
+  }
+
   function confetti() {
     $$(".t.on").forEach((tile) => (tile.dataset.c = pick(TILE_KEYS)));
     if (reduceMotion) return;

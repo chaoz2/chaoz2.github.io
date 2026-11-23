@@ -362,6 +362,15 @@ h2 { font-weight: 800; font-size: clamp(28px, 4vw, 42px); line-height: 1.12; mar
   transition: transform 0.2s cubic-bezier(.3, 1.6, .5, 1), opacity 0.3s, box-shadow 0.2s;
 }
 .m.gap { background: var(--bg-2); }
+.m.grad {
+  display: grid; place-items: center; cursor: pointer;
+  background: linear-gradient(135deg, var(--butter), var(--coral));
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--butter) 45%, transparent), 0 4px 14px -4px color-mix(in srgb, var(--coral) 70%, transparent);
+}
+.m.grad svg { width: 68%; height: 68%; fill: #201f26; pointer-events: none; transform: rotate(-12deg); transition: transform 0.3s cubic-bezier(.3, 1.6, .5, 1); }
+.m.grad:hover svg { transform: rotate(8deg) translateY(-2px); }
+.m.grad.toss svg { animation: toss 0.6s cubic-bezier(.3, 1.4, .5, 1); }
+@keyframes toss { 40% { transform: translateY(-14px) rotate(200deg); } 100% { transform: rotate(348deg); } }
 .m.logo { display: grid; place-items: center; }
 .m.logo svg { width: 62%; height: 62%; fill: #201f26; pointer-events: none; }
 .m.logo:is([data-k="sjtu"], [data-k="cmu"], [data-k="uw"], [data-k="hs"]) svg { fill: var(--ink); }
