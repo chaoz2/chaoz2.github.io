@@ -47,7 +47,8 @@
       "I'm 16 tiles in a trench coat.",
       "click Chao's name. it tickles.",
       "psst: ↑↑↓↓←→←→BA",
-      "you can paint on the Game of Life!",
+      "hover the board and type something!",
+      "double-click the board. trust me.",
       "have you tried turning it off and on?",
       "I run on vanilla JS and vibes.",
       "my p99 is one blink.",
@@ -58,7 +59,8 @@
       "我是 16 块方块拼成的。",
       "点一下名字试试，会痒。",
       "悄悄说：↑↑↓↓←→←→BA",
-      "下面的生命游戏可以画画哦！",
+      "鼠标放在棋盘上，打几个字试试！",
+      "双击棋盘，有惊喜。",
       "试过关机再开机吗？",
       "我靠原生 JS 和氛围感运行。",
       "我的 p99 是眨一次眼。",
@@ -178,14 +180,55 @@
   const life = (() => {
     const cv = $("#life");
     const ctx = cv.getContext("2d");
-    const CELL = 14;
+    const CELL = 13;
     let cols = 0, rows = 0, W = 0, H = 0, ox = 0, oy = 0;
     let grid = new Uint8Array(0), age = new Uint16Array(0);
-    let gen = 0, visible = true, last = 0;
-    const genEl = $("#gen");
+    let gen = 0, pop = 0, visible = true, last = 0, holdUntil = 0;
+    let hover = null; // {x, y} cell under the pointer
+    const genEl = $("#gen"), popEl = $("#pop"), labelEl = $("#life-label");
     const AGE = ["butter", "coral", "bubble", "lilac", "peri", "mint"];
     const ageColor = (a) => PAL[AGE[a < 2 ? 0 : a < 4 ? 1 : a < 8 ? 2 : a < 16 ? 3 : a < 40 ? 4 : 5]];
     const hasRound = typeof ctx.roundRect === "function";
+
+    // classic patterns, dropped on double-click (in this order)
+    const PATTERNS = [
+      ["glider", [".#.", "..#", "###"]],
+      ["spaceship", [".#..#", "#....", "#...#", "####."]],
+      ["pulsar", [
+        "..###...###..", ".............", "#....#.#....#", "#....#.#....#", "#....#.#....#", "..###...###..",
+        ".............", "..###...###..", "#....#.#....#", "#....#.#....#", "#....#.#....#", ".............", "..###...###..",
+      ]],
+      ["r-pentomino", [".##", "##.", ".#."]],
+      ["acorn", [".#.....", "...#...", "##..###"]],
+      ["glider gun", [
+        "........................#...........", "......................#.#...........",
+        "............##......##............##", "...........#...#....##............##",
+        "##........#.....#...##..............", "##........#...#.##....#.#...........",
+        "..........#.....#.......#...........", "...........#...#.....................",
+        "............##......................",
+      ]],
+    ];
+    let patIdx = 0;
+
+    // 3×5 pixel font for typing onto the board
+    const FONT = {
+      A: [".#.", "#.#", "###", "#.#", "#.#"], B: ["##.", "#.#", "##.", "#.#", "##."], C: [".##", "#..", "#..", "#..", ".##"],
+      D: ["##.", "#.#", "#.#", "#.#", "##."], E: ["###", "#..", "##.", "#..", "###"], F: ["###", "#..", "##.", "#..", "#.."],
+      G: [".##", "#..", "#.#", "#.#", ".##"], H: ["#.#", "#.#", "###", "#.#", "#.#"], I: ["###", ".#.", ".#.", ".#.", "###"],
+      J: ["..#", "..#", "..#", "#.#", ".#."], K: ["#.#", "#.#", "##.", "#.#", "#.#"], L: ["#..", "#..", "#..", "#..", "###"],
+      M: ["#.#", "###", "###", "#.#", "#.#"], N: ["##.", "#.#", "#.#", "#.#", "#.#"], O: [".#.", "#.#", "#.#", "#.#", ".#."],
+      P: ["##.", "#.#", "##.", "#..", "#.."], Q: [".#.", "#.#", "#.#", "##.", ".##"], R: ["##.", "#.#", "##.", "#.#", "#.#"],
+      S: [".##", "#..", ".#.", "..#", "##."], T: ["###", ".#.", ".#.", ".#.", ".#."], U: ["#.#", "#.#", "#.#", "#.#", "###"],
+      V: ["#.#", "#.#", "#.#", "#.#", ".#."], W: ["#.#", "#.#", "###", "###", "#.#"], X: ["#.#", "#.#", ".#.", "#.#", "#.#"],
+      Y: ["#.#", "#.#", ".#.", ".#.", ".#."], Z: ["###", "..#", ".#.", "#..", "###"],
+      0: ["###", "#.#", "#.#", "#.#", "###"], 1: [".#.", "##.", ".#.", ".#.", "###"], 2: ["##.", "..#", ".#.", "#..", "###"],
+      3: ["##.", "..#", ".#.", "..#", "##."], 4: ["#.#", "#.#", "###", "..#", "..#"], 5: ["###", "#..", "##.", "..#", "##."],
+      6: [".##", "#..", "###", "#.#", "###"], 7: ["###", "..#", ".#.", ".#.", ".#."], 8: ["###", "#.#", "###", "#.#", "###"],
+      9: ["###", "#.#", "###", "..#", "##."], "!": [".#.", ".#.", ".#.", "...", ".#."], "?": ["##.", "..#", ".#.", "...", ".#."],
+      "<": ["..#", ".#.", "#..", ".#.", "..#"], ">": ["#..", ".#.", "..#", ".#.", "#.."], "-": ["...", "...", "###", "...", "..."],
+      ".": ["...", "...", "...", "...", ".#."], "+": ["...", ".#.", "###", ".#.", "..."], "=": ["...", "###", "...", "###", "..."],
+    };
+    let pen = null; // where the next typed letter goes
 
     function resize() {
       const r = cv.getBoundingClientRect();
@@ -200,11 +243,21 @@
       draw();
       updateTileCount();
     }
-    function set(x, y) {
-      grid[((y + rows) % rows) * cols + ((x + cols) % cols)] = 1;
+    const wrapX = (x) => (x + cols) % cols, wrapY = (y) => (y + rows) % rows;
+    function set(x, y, v = 1) {
+      const i = wrapY(y) * cols + wrapX(x);
+      grid[i] = v;
+      if (!v) age[i] = 0;
     }
-    function glider(x, y) {
-      [[1, 0], [2, 1], [0, 2], [1, 2], [2, 2]].forEach(([dx, dy]) => set(x + dx, y + dy));
+    function stamp(rowsArr, cx, cy, clear) {
+      const h = rowsArr.length, w = rowsArr[0].length;
+      const x0 = cx - Math.floor(w / 2), y0 = cy - Math.floor(h / 2);
+      if (clear) for (let y = -1; y <= h; y++) for (let x = -1; x <= w; x++) set(x0 + x, y0 + y, 0);
+      rowsArr.forEach((row, y) => [...row].forEach((ch, x) => ch === "#" && set(x0 + x, y0 + y)));
+    }
+    function glider(x, y, dir = "se") {
+      const shapes = { se: [".#.", "..#", "###"], sw: [".#.", "#..", "###"] };
+      stamp(shapes[dir], x, y);
     }
     function splat(cx, cy, r) {
       for (let dy = -r; dy <= r; dy++) for (let dx = -r; dx <= r; dx++) if (Math.random() < 0.5) set(cx + dx, cy + dy);
@@ -218,7 +271,7 @@
     }
     function step() {
       const next = new Uint8Array(cols * rows);
-      let pop = 0;
+      pop = 0;
       for (let y = 0; y < rows; y++) {
         const ym = ((y - 1 + rows) % rows) * cols, y0 = y * cols, yp = ((y + 1) % rows) * cols;
         for (let x = 0; x < cols; x++) {
@@ -239,27 +292,42 @@
         for (let k = 0; k < 2; k++) splat(Math.floor(Math.random() * cols), Math.floor(Math.random() * rows), 3);
       }
     }
-    function cellRect(x, y) {
-      const s = CELL - 3;
-      const px = ox + x * CELL + 1.5, py = oy + y * CELL + 1.5;
-      if (hasRound) { ctx.beginPath(); ctx.roundRect(px, py, s, s, 3.5); ctx.fill(); }
+    function cellRect(x, y, inset = 1.5, rad = 3.5) {
+      const s = CELL - inset * 2;
+      const px = ox + x * CELL + inset, py = oy + y * CELL + inset;
+      if (hasRound) { ctx.beginPath(); ctx.roundRect(px, py, s, s, rad); ctx.fill(); }
       else ctx.fillRect(px, py, s, s);
     }
     function draw() {
       if (!cols) return;
       ctx.clearRect(0, 0, W, H);
       ctx.fillStyle = PAL["bg-2"];
+      let p = 0;
       for (let y = 0; y < rows; y++) for (let x = 0; x < cols; x++) if (!grid[y * cols + x]) cellRect(x, y);
       for (let y = 0; y < rows; y++) {
         for (let x = 0; x < cols; x++) {
           const i = y * cols + x;
-          if (grid[i]) { ctx.fillStyle = ageColor(age[i]); cellRect(x, y); }
+          if (grid[i]) { p++; ctx.fillStyle = ageColor(age[i]); cellRect(x, y); }
         }
       }
+      // cursor lens: a soft brush outline around the hovered cell
+      if (hover) {
+        ctx.save();
+        ctx.strokeStyle = PAL.ink;
+        ctx.globalAlpha = 0.35;
+        ctx.lineWidth = 1.5;
+        const px = ox + (hover.x - 1) * CELL + 0.75, py = oy + (hover.y - 1) * CELL + 0.75, s = CELL * 3 - 1.5;
+        ctx.beginPath();
+        if (hasRound) ctx.roundRect(px, py, s, s, 6); else ctx.rect(px, py, s, s);
+        ctx.stroke();
+        ctx.restore();
+      }
+      pop = p;
       genEl.textContent = gen;
+      popEl.textContent = pop;
     }
     function loop(ts) {
-      if (visible && !reduceMotion && ts - last > 120) {
+      if (visible && !reduceMotion && ts - last > 120 && ts > holdUntil) {
         last = ts;
         step();
         draw();
@@ -267,23 +335,90 @@
       requestAnimationFrame(loop);
     }
 
-    let painting = false;
-    function paintAt(e) {
+    let toastT;
+    function toast(text) {
+      labelEl.textContent = text;
+      labelEl.classList.remove("toast");
+      void labelEl.offsetWidth;
+      labelEl.classList.add("toast");
+      clearTimeout(toastT);
+      toastT = setTimeout(() => { labelEl.textContent = "life.js"; labelEl.classList.remove("toast"); }, 1600);
+    }
+
+    function cellAt(e) {
       const r = cv.getBoundingClientRect();
       const x = Math.floor((e.clientX - r.left - ox) / CELL);
       const y = Math.floor((e.clientY - r.top - oy) / CELL);
-      if (x < 0 || y < 0 || x >= cols || y >= rows) return;
-      for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) if (Math.random() < 0.7) set(x + dx, y + dy);
+      return x < 0 || y < 0 || x >= cols || y >= rows ? null : { x, y };
+    }
+    let painting = false;
+    function paintAt(e) {
+      const c = cellAt(e);
+      if (!c) return;
+      for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) if (Math.random() < 0.7) set(c.x + dx, c.y + dy);
       draw();
     }
     cv.addEventListener("pointerdown", (e) => { painting = true; cv.setPointerCapture(e.pointerId); paintAt(e); });
-    cv.addEventListener("pointermove", (e) => painting && paintAt(e));
+    cv.addEventListener("pointermove", (e) => {
+      const c = cellAt(e);
+      const moved = !hover || !c || c.x !== hover.x || c.y !== hover.y;
+      hover = e.pointerType === "mouse" ? c : null;
+      if (painting) paintAt(e);
+      else if (moved) { pen = null; draw(); }
+    });
+    cv.addEventListener("pointerleave", () => { hover = null; pen = null; draw(); });
     ["pointerup", "pointercancel"].forEach((ev) => cv.addEventListener(ev, () => (painting = false)));
+
+    // double-click: drop the next classic pattern
+    cv.addEventListener("dblclick", (e) => {
+      const c = cellAt(e);
+      if (!c) return;
+      const [name, shape] = PATTERNS[patIdx];
+      patIdx = (patIdx + 1) % PATTERNS.length;
+      stamp(shape, c.x, c.y, true);
+      holdUntil = performance.now() + 500;
+      toast(name + " ✦");
+      draw();
+    });
+
+    // type while hovering (or focused): letters become cells
+    window.addEventListener("keydown", (e) => {
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      const active = document.activeElement === cv || hover;
+      if (!active || !cols) return;
+      const ch = e.key.length === 1 ? e.key.toUpperCase() : e.key;
+      if (!pen) {
+        const start = hover || { x: Math.floor(cols / 2) - 6, y: Math.floor(rows / 2) };
+        pen = { x: start.x, y: start.y - 2, x0: start.x };
+      }
+      if (ch === " ") { e.preventDefault(); pen.x += 3; }
+      else if (ch === "Enter") { pen.x = pen.x0; pen.y += 7; }
+      else if (FONT[ch]) {
+        FONT[ch].forEach((row, y) => [...row].forEach((c, x) => c === "#" && set(pen.x + x, pen.y + y)));
+        for (let y = -1; y <= 5; y++) for (let x = -1; x <= 3; x++) {
+          const i = wrapY(pen.y + y) * cols + wrapX(pen.x + x);
+          if (grid[i]) age[i] = 0;
+        }
+        pen.x += 4;
+        if (pen.x > cols - 3) { pen.x = pen.x0 < cols - 6 ? pen.x0 : 1; pen.y += 7; }
+      } else return;
+      holdUntil = performance.now() + 1100; // pause so the word can be read before it comes alive
+      draw();
+    });
+
+    // Tile sneezes a glider onto the board from its corner
+    function sneeze() {
+      if (!cols) return;
+      glider(cols - 5, 2, "sw");
+      glider(cols - 9, 1, "sw");
+      toast("achoo!");
+      draw();
+    }
 
     new IntersectionObserver((ents) => ents.forEach((en) => (visible = en.isIntersecting))).observe(cv);
     new ResizeObserver(() => resize()).observe(cv);
     requestAnimationFrame(loop);
-    return { draw, cells: () => cols * rows };
+    return { draw, sneeze, cells: () => cols * rows };
   })();
 
   /* ───────── Tile, the buddy ───────── */
@@ -318,6 +453,7 @@
       buddy.classList.remove("jump");
       void buddy.offsetWidth;
       buddy.classList.add("jump");
+      if (Math.random() < 0.5 || lineIdx === 2) life.sneeze();
     });
     // a little hello shortly after load
     setTimeout(() => { lineIdx = 0; say(BUDDY_LINES[lang()][0]); }, 1600);

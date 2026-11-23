@@ -22,7 +22,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;500;700&family=Pixelify+Sans:wght@500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=db406a4e">
+  <link rel="stylesheet" href="styles.css?v=892c95e3">
 </head>
 <body>
   <a class="skip" href="#main"><span class="en">Skip to content</span><span class="zh">跳到正文</span></a>
@@ -92,11 +92,11 @@
           <span class="cheek r" aria-hidden="true"></span>
         </button>
         <span class="bubble" id="bubble" role="status" aria-live="polite"></span>
-        <canvas id="life" role="img" aria-label="Conway's Game of Life drawn as mosaic tiles. Click or drag to paint new cells."></canvas>
+        <canvas id="life" tabindex="0" role="img" aria-label="Conway's Game of Life drawn as mosaic tiles. Click or drag to paint, double-click to drop a classic pattern, type to write letters."></canvas>
         <figcaption>
           <span class="dot" aria-hidden="true"></span>
-          <span>life.js</span>
-          <span class="gen">gen <b id="gen">0</b></span>
+          <span class="life-label" id="life-label">life.js</span>
+          <span class="gen">gen <b id="gen">0</b> · pop <b id="pop">0</b></span>
         </figcaption>
       </figure>
     </section>
@@ -357,6 +357,6 @@
   </footer>
 
   <canvas id="confetti" aria-hidden="true"></canvas>
-  <script src="main.js?v=70328b40" defer></script>
+  <script src="main.js?v=3c4ad240" defer></script>
 </body>
 </html>
