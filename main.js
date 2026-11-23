@@ -184,6 +184,7 @@
     let cols = 0, rows = 0, W = 0, H = 0, ox = 0, oy = 0;
     let grid = new Uint8Array(0), age = new Uint16Array(0);
     let gen = 0, pop = 0, visible = true, last = 0, holdUntil = 0;
+    let nuke = null, quietUntil = 0, wasteland = false; // ☢
     let hover = null; // {x, y} cell under the pointer
     const genEl = $("#gen"), popEl = $("#pop"), labelEl = $("#life-label");
     const AGE = ["butter", "coral", "bubble", "lilac", "peri", "mint"];
@@ -286,7 +287,9 @@
       }
       grid = next;
       gen++;
-      // keep it lively once it settles down
+      // keep it lively once it settles down (but let a fresh wasteland stay quiet for a bit)
+      if (performance.now() < quietUntil) return;
+      if (wasteland) { wasteland = false; if (pop < cols * rows * 0.05) toast("life finds a way 🌱"); }
       if (pop < cols * rows * 0.05 || gen % 400 === 0) {
         for (let k = 0; k < 3; k++) glider(Math.floor(Math.random() * cols), Math.floor(Math.random() * rows));
         for (let k = 0; k < 2; k++) splat(Math.floor(Math.random() * cols), Math.floor(Math.random() * rows), 3);
@@ -327,6 +330,7 @@
       popEl.textContent = pop;
     }
     function loop(ts) {
+      if (nuke) { nukeFrame(ts); requestAnimationFrame(loop); return; }
       if (visible && !reduceMotion && ts - last > 120 && ts > holdUntil) {
         last = ts;
         step();
@@ -406,6 +410,55 @@
       draw();
     });
 
+    // ☢ nuke: a shockwave from the center wipes out everything it touches
+    const NUKE_MS = 750;
+    function detonate() {
+      if (!cols || nuke) return;
+      const card = cv.closest(".life-card");
+      card.classList.remove("shake");
+      void card.offsetWidth;
+      card.classList.add("shake");
+      if (reduceMotion) { finishNuke(performance.now()); return; }
+      nuke = { t0: performance.now(), cx: (cols - 1) / 2, cy: (rows - 1) / 2, maxR: Math.hypot(cols, rows) / 2 + 2 };
+    }
+    function finishNuke(ts) {
+      grid.fill(0);
+      age.fill(0);
+      nuke = null;
+      gen = 0;
+      holdUntil = ts + 300;
+      quietUntil = performance.now() + 8000;
+      wasteland = true;
+      toast("☢ wasteland");
+      draw();
+    }
+    function nukeFrame(ts) {
+      const t = Math.min(1, (ts - nuke.t0) / NUKE_MS);
+      const ease = 1 - Math.pow(1 - t, 3);
+      const R = ease * nuke.maxR;
+      for (let y = 0; y < rows; y++) for (let x = 0; x < cols; x++) {
+        if (Math.hypot(x - nuke.cx, y - nuke.cy) < R) { const i = y * cols + x; grid[i] = 0; age[i] = 0; }
+      }
+      draw();
+      const px = ox + (nuke.cx + 0.5) * CELL, py = oy + (nuke.cy + 0.5) * CELL, pr = R * CELL;
+      ctx.save();
+      // flash
+      if (t < 0.25) { ctx.globalAlpha = 0.55 * (1 - t / 0.25); ctx.fillStyle = PAL.butter; ctx.fillRect(0, 0, W, H); }
+      // fireball core + shockwave ring
+      const g = ctx.createRadialGradient(px, py, 0, px, py, Math.max(1, pr));
+      g.addColorStop(0, PAL.butter); g.addColorStop(0.55, PAL.coral); g.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.globalAlpha = 0.5 * (1 - t);
+      ctx.fillStyle = g;
+      ctx.beginPath(); ctx.arc(px, py, Math.max(1, pr), 0, Math.PI * 2); ctx.fill();
+      ctx.globalAlpha = 0.9 * (1 - t);
+      ctx.strokeStyle = PAL.butter;
+      ctx.lineWidth = 3 + 6 * (1 - t);
+      ctx.beginPath(); ctx.arc(px, py, Math.max(1, pr), 0, Math.PI * 2); ctx.stroke();
+      ctx.restore();
+      if (t >= 1) finishNuke(ts);
+    }
+    $("#nuke").addEventListener("click", detonate);
+
     // Tile sneezes a glider onto the board from its corner
     function sneeze() {
       if (!cols) return;
@@ -418,7 +471,7 @@
     new IntersectionObserver((ents) => ents.forEach((en) => (visible = en.isIntersecting))).observe(cv);
     new ResizeObserver(() => resize()).observe(cv);
     requestAnimationFrame(loop);
-    return { draw, sneeze, cells: () => cols * rows };
+    return { draw, sneeze, detonate, cells: () => cols * rows };
   })();
 
   /* ───────── Tile, the buddy ───────── */
