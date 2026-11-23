@@ -222,26 +222,9 @@ strong { font-weight: 650; color: var(--ink); }
 .lede { font-size: clamp(18px, 2vw, 20.5px); line-height: 1.6; color: var(--ink-2); margin: 0 0 20px; max-width: 32em; }
 .now { font-size: 15px; margin: 0 0 30px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; }
 .now-label { color: var(--ink-3); font-family: var(--mono); font-size: 13px; }
-.now-hint { font-size: 13px; color: var(--ink-3); transition: opacity 0.3s; }
-.redact {
-  position: relative; border: 0; padding: 4px 10px; cursor: pointer; border-radius: 10px;
-  background: transparent; font-weight: 600; font-size: 15px;
-}
-.redact > span { position: relative; z-index: 1; color: transparent; transition: color 0.35s; }
-.redact::before {
-  content: ""; position: absolute; inset: 0; border-radius: 10px;
-  background:
-    conic-gradient(from 90deg at 50% 50%, var(--coral) 25%, var(--butter) 0 50%, var(--peri) 0 75%, var(--mint) 0) 0 0 / 14px 14px,
-    var(--ink);
-  filter: saturate(0.85);
-  transition: opacity 0.4s steps(5), clip-path 0.4s steps(5);
-  clip-path: inset(0 0 0 0 round 10px);
-  animation: shimmer 1.6s steps(4) infinite;
-}
-@keyframes shimmer { to { background-position: 14px 7px, 0 0; } }
-.redact:hover > span, .redact:focus-visible > span, .redact[aria-pressed="true"] > span { color: var(--ink); }
-.redact:hover::before, .redact:focus-visible::before, .redact[aria-pressed="true"]::before { opacity: 0.12; clip-path: inset(85% 0 0 0 round 10px); }
-.now:has(.redact:hover) .now-hint, .now:has(.redact[aria-pressed="true"]) .now-hint { opacity: 0; }
+.now-text { font-weight: 600; color: var(--ink); }
+.now-dot { width: 8px; height: 8px; border-radius: 3px; background: var(--mint); box-shadow: 0 0 0 0 color-mix(in srgb, var(--mint) 50%, transparent); animation: ping 2s ease-out infinite; }
+@keyframes ping { 70% { box-shadow: 0 0 0 7px transparent; } 100% { box-shadow: 0 0 0 0 transparent; } }
 
 .hero-links { display: flex; flex-wrap: wrap; gap: 12px; }
 .btn {

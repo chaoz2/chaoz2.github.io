@@ -173,12 +173,6 @@
     });
   });
 
-  /* ───────── redacted reveal ───────── */
-  const redact = $(".redact");
-  redact.addEventListener("click", () => {
-    redact.setAttribute("aria-pressed", redact.getAttribute("aria-pressed") === "true" ? "false" : "true");
-  });
-
   /* ───────── Game of Life ───────── */
   const life = (() => {
     const cv = $("#life");
