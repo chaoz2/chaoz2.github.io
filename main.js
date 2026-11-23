@@ -364,19 +364,16 @@
   const tiles = [];
   const heads = [];
   const gfrag = document.createDocumentFragment();
-  gfrag.appendChild(document.createElement("span"));
-  for (let m = 0; m < 12; m++) {
-    const h = document.createElement("span");
-    h.className = "mh";
-    heads.push(h);
-    gfrag.appendChild(h);
-  }
-  let pastMonths = 0;
+  // logos for the first tile of each company chapter, borrowed from the work cards
+  const LOGO_OF = { openai: "OpenAI", rockset: "Rockset", fb: "Facebook", intel: "Intel" };
+  const logoSvg = (k) => {
+    const src = LOGO_OF[k] && document.querySelector(`.co-logo[title="${LOGO_OF[k]}"] svg`);
+    return src ? src.cloneNode(true) : null;
+  };
+  let pastMonths = 0, prevKey = null;
+  const byYM = {};
+  // pass 1: walk months in time order (so we know where each chapter starts)
   for (let y = startYear; y <= endYear; y++) {
-    const yl = document.createElement("span");
-    yl.className = "yr";
-    yl.textContent = "'" + String(y).slice(2);
-    gfrag.appendChild(yl);
     for (let m = 0; m < 12; m++) {
       const i = y * 12 + m;
       const el = document.createElement("span");
@@ -391,24 +388,46 @@
           el.dataset.k = k;
           el.style.setProperty("--c", `var(${KEYS[k].c})`);
           counts[k] = (counts[k] || 0) + 1;
+          if (k !== prevKey) {
+            const svg = logoSvg(k);
+            if (svg) { el.classList.add("logo"); el.appendChild(svg); }
+          }
+          prevKey = k;
         } else {
           el.classList.add("gap");
+          prevKey = null;
         }
         if (info.marks.length) el.classList.add("mark");
-        if (info.now) el.classList.add("now");
+        if (info.now) el.classList.add("is-now");
       } else {
         el.classList.add("future");
       }
       el._info = info;
       tiles.push(el);
-      gfrag.appendChild(el);
+      byYM[y * 12 + m] = el;
     }
+  }
+  // pass 2: GitHub-style layout, years as columns (old → new, left → right), months as rows
+  gridEl.style.setProperty("--ncols", endYear - startYear + 1);
+  gfrag.appendChild(document.createElement("span"));
+  for (let y = startYear; y <= endYear; y++) {
+    const yl = document.createElement("span");
+    yl.className = "yh";
+    yl.textContent = "'" + String(y).slice(2);
+    gfrag.appendChild(yl);
+  }
+  for (let m = 0; m < 12; m++) {
+    const ml = document.createElement("span");
+    ml.className = "ml";
+    heads.push(ml);
+    gfrag.appendChild(ml);
+    for (let y = startYear; y <= endYear; y++) gfrag.appendChild(byYM[y * 12 + m]);
   }
   gridEl.appendChild(gfrag);
   $("#stat-months").textContent = pastMonths;
 
   function renderMonthHeads() {
-    heads.forEach((h, m) => (h.textContent = lang() === "zh" ? String(m + 1) : MONTHS_EN[m][0]));
+    heads.forEach((h, m) => (h.textContent = lang() === "zh" ? m + 1 + "月" : MONTHS_EN[m]));
   }
   renderMonthHeads();
   langHooks.push(renderMonthHeads);

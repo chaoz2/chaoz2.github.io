@@ -337,22 +337,24 @@ h2 { font-weight: 800; font-size: clamp(28px, 4vw, 42px); line-height: 1.12; mar
   padding: clamp(18px, 3vw, 32px);
 }
 .months {
-  display: grid; grid-template-columns: 40px repeat(12, minmax(0, 1fr));
-  gap: 5px; max-width: 620px; font-family: var(--mono); font-size: 11.5px; color: var(--ink-3);
+  display: grid; grid-template-columns: 38px repeat(var(--ncols, 14), minmax(0, 1fr));
+  gap: 5px; max-width: 600px; font-family: var(--mono); font-size: 11.5px; color: var(--ink-3);
 }
-.months .mh { text-align: center; padding-bottom: 2px; }
-.months .yr { align-self: center; text-align: right; padding-right: 8px; font-variant-numeric: tabular-nums; }
+.months .yh { text-align: center; padding-bottom: 2px; font-variant-numeric: tabular-nums; }
+.months .ml { align-self: center; text-align: right; padding-right: 8px; }
 .m {
   aspect-ratio: 1; border-radius: 28%; background: var(--c, var(--bg-2)); position: relative;
   transition: transform 0.2s cubic-bezier(.3, 1.6, .5, 1), opacity 0.3s, box-shadow 0.2s;
 }
 .m.gap { background: var(--bg-2); }
+.m.logo { display: grid; place-items: center; }
+.m.logo svg { width: 62%; height: 62%; fill: #201f26; pointer-events: none; }
 .m.future { background: transparent; box-shadow: inset 0 0 0 1.5px var(--line); }
 .m.mark::after {
   content: ""; position: absolute; width: 30%; height: 30%; right: 16%; top: 16%;
   background: var(--card); border-radius: 30%;
 }
-.m.now { animation: nowpulse 1.6s ease-in-out infinite; }
+.m.is-now { animation: nowpulse 1.6s ease-in-out infinite; }
 @keyframes nowpulse { 50% { box-shadow: 0 0 0 4px color-mix(in srgb, var(--c) 35%, transparent); } }
 .m:hover { transform: scale(1.35); z-index: 2; box-shadow: 0 4px 10px -2px rgba(0, 0, 0, 0.25); }
 .months[data-filter] .m:not(.future) { opacity: 0.15; }
@@ -387,7 +389,7 @@ h2 { font-weight: 800; font-size: clamp(28px, 4vw, 42px); line-height: 1.12; mar
   .legend .note { grid-column: 1 / -1; }
 }
 @media (max-width: 480px) {
-  .months { grid-template-columns: 30px repeat(12, minmax(0, 1fr)); gap: 3px; font-size: 10px; }
+  .months { grid-template-columns: 30px repeat(var(--ncols, 14), minmax(0, 1fr)); gap: 3px; font-size: 9.5px; }
   .legend li { font-size: 14px; padding: 6px 8px; }
 }
 
