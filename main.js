@@ -81,11 +81,23 @@
   /* ───────── theme ───────── */
   const PAL = {};
   const PAL_KEYS = ["coral", "butter", "mint", "peri", "bubble", "lilac", "sky", "ink", "card", "bg", "bg-2", "line"];
+  // Fallbacks keep the canvases colorful even if styles.css arrives after this script runs.
+  const FALLBACK = {
+    light: { coral: "#ff7a59", butter: "#ffc94d", mint: "#2ec4a0", peri: "#6c8cff", bubble: "#ff9ec4", lilac: "#a98bff", sky: "#5cc0f5", ink: "#201f26", card: "#ffffff", bg: "#f7f4ee", "bg-2": "#efeae1", line: "#e7e1d6" },
+    dark: { coral: "#ff8a6b", butter: "#ffd166", mint: "#3fd2ae", peri: "#7f9bff", bubble: "#ffadd0", lilac: "#b79cff", sky: "#6fcbff", ink: "#f2efe9", card: "#1a1b21", bg: "#131418", "bg-2": "#1d1e24", line: "#2a2b33" },
+  };
   function refreshPalette() {
     const cs = getComputedStyle(root);
-    PAL_KEYS.forEach((k) => (PAL[k] = cs.getPropertyValue("--" + k).trim()));
+    const dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+    const fb = FALLBACK[dark ? "dark" : "light"];
+    PAL_KEYS.forEach((k) => (PAL[k] = cs.getPropertyValue("--" + k).trim() || fb[k]));
   }
   refreshPalette();
+  // re-read once every stylesheet (and font) has landed, then repaint
+  window.addEventListener("load", () => {
+    refreshPalette();
+    if (typeof life !== "undefined") life.draw();
+  });
   const isDark = () =>
     root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
   $("#theme-toggle").addEventListener("click", () => {
