@@ -26,7 +26,7 @@
 
   /* brand-inspired, softened to fit the palette */
   --c-openai: #3cc49f;   /* ChatGPT green */
-  --c-rockset: #a27cf6;  /* Rockset purple */
+  --c-rockset: #8a52f0;  /* Rockset violet (#6E2BD9, softened) */
   --c-fb: #6f9bff;       /* Facebook blue */
   --c-intel: #4fbcef;    /* Intel blue */
   --c-cmu: #ef6b6f;      /* Carnegie red */
@@ -65,7 +65,7 @@
     --sky: #6fcbff;
     --sand: #8b7f6a;
     --c-openai: #45d1ab;
-    --c-rockset: #ae8cff;
+    --c-rockset: #9a66ff;
     --c-fb: #7ea6ff;
     --c-intel: #5cc6f5;
     --c-cmu: #f47a7e;
@@ -95,7 +95,7 @@
   --sky: #6fcbff;
   --sand: #8b7f6a;
   --c-openai: #45d1ab;
-  --c-rockset: #ae8cff;
+  --c-rockset: #9a66ff;
   --c-fb: #7ea6ff;
   --c-intel: #5cc6f5;
   --c-cmu: #f47a7e;
@@ -494,10 +494,11 @@ h2 { font-weight: 800; font-size: clamp(28px, 4vw, 42px); line-height: 1.12; mar
 .co-logo.sm svg { width: 19px; height: 19px; }
 .co-logo.sm.wide svg { width: 24px; height: 24px; }
 .co-logo.sm .mk { width: 21px; height: 21px; }
-.co-logo.cmu, .co-logo.sjtu { color: #fff; }
+.co-logo.cmu, .co-logo.sjtu, .co-logo[title="Rockset"] { color: #fff; }
 .co-logo.sm.cmu svg { width: 27px; height: 27px; }
 .m.logo[data-k="cmu"] svg { fill: #fff; width: 78%; height: 78%; }
 .m.logo[data-k="sjtu"] .mk { background: #fff; }
+.m.logo[data-k="rockset"] svg { fill: #fff; }
 .chap-card:hover .co-logo { transform: rotate(-8deg) scale(1.06); }
 
 @media (max-width: 720px) {
