@@ -458,13 +458,14 @@ h2 { font-weight: 800; font-size: clamp(28px, 4vw, 42px); line-height: 1.12; mar
 .r p { margin: 2px 0 0; color: var(--ink-2); font-size: 15px; }
 .r-link { font-size: 14px; font-weight: 600; justify-self: start; }
 
-.job-tile { flex: none; display: grid; grid-template-columns: repeat(2, 13px); gap: 2.5px; }
-.job-tile i { width: 13px; height: 13px; border-radius: 4.5px; background: var(--c); transition: transform 0.4s cubic-bezier(.3, 1.6, .5, 1); }
-.job-tile i:nth-child(2) { opacity: 0.55; }
-.job-tile i:nth-child(3) { opacity: 0.3; }
-.job-tile i:nth-child(4) { opacity: 0.8; }
-.chap-card:hover .job-tile i:nth-child(1) { transform: translate(-2px, -2px) rotate(-10deg); }
-.chap-card:hover .job-tile i:nth-child(4) { transform: translate(2px, 2px) rotate(10deg); }
+.co-logo {
+  flex: none; width: 40px; height: 40px; border-radius: 13px; display: grid; place-items: center;
+  background: var(--c); color: #201f26; box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.12);
+  transition: transform 0.4s cubic-bezier(.3, 1.6, .5, 1);
+}
+.co-logo svg { width: 21px; height: 21px; fill: currentColor; }
+.co-logo.wide svg { width: 32px; height: 32px; }
+.chap-card:hover .co-logo { transform: rotate(-8deg) scale(1.06); }
 
 @media (max-width: 720px) {
   .story::before { display: none; }
