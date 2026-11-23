@@ -30,7 +30,7 @@
   --c-fb: #6f9bff;       /* Facebook blue */
   --c-intel: #4fbcef;    /* Intel blue */
   --c-cmu: #ef6b6f;      /* Carnegie red */
-  --c-sjtu: #f48f98;     /* Jiao Tong red */
+  --c-sjtu: #4a76cf;     /* Jiao Tong blue (#0C4CA3, softened) */
   --c-uw: #b09ae0;       /* Husky purple */
   --c-hs: #9aa8c8;       /* 山大附中 blue, muted */
 
@@ -69,7 +69,7 @@
     --c-fb: #7ea6ff;
     --c-intel: #5cc6f5;
     --c-cmu: #f47a7e;
-    --c-sjtu: #f79ea6;
+    --c-sjtu: #5a86dc;
     --c-uw: #bba7ea;
     --c-hs: #a8b5d4;
     color-scheme: dark;
@@ -99,7 +99,7 @@
   --c-fb: #7ea6ff;
   --c-intel: #5cc6f5;
   --c-cmu: #f47a7e;
-  --c-sjtu: #f79ea6;
+  --c-sjtu: #5a86dc;
   --c-uw: #bba7ea;
   --c-hs: #a8b5d4;
   color-scheme: dark;
@@ -494,9 +494,10 @@ h2 { font-weight: 800; font-size: clamp(28px, 4vw, 42px); line-height: 1.12; mar
 .co-logo.sm svg { width: 19px; height: 19px; }
 .co-logo.sm.wide svg { width: 24px; height: 24px; }
 .co-logo.sm .mk { width: 21px; height: 21px; }
-.co-logo.cmu { color: #fff; }
+.co-logo.cmu, .co-logo.sjtu { color: #fff; }
 .co-logo.sm.cmu svg { width: 27px; height: 27px; }
 .m.logo[data-k="cmu"] svg { fill: #fff; width: 78%; height: 78%; }
+.m.logo[data-k="sjtu"] .mk { background: #fff; }
 .chap-card:hover .co-logo { transform: rotate(-8deg) scale(1.06); }
 
 @media (max-width: 720px) {
