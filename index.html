@@ -22,7 +22,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;500;700&family=Pixelify+Sans:wght@500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=497e9198">
+  <link rel="stylesheet" href="styles.css?v=37271a1d">
 </head>
 <body>
   <a class="skip" href="#main"><span class="en">Skip to content</span><span class="zh">跳到正文</span></a>
@@ -90,6 +90,10 @@
           <span class="eye r" aria-hidden="true"><i></i></span>
           <span class="cheek l" aria-hidden="true"></span>
           <span class="cheek r" aria-hidden="true"></span>
+          <span class="arm" aria-hidden="true"></span>
+        </button>
+        <button class="bomb" type="button" id="bomb" aria-label="Launch the bomb at the Game of Life" title="launch">
+          <svg viewBox="0 0 42 24" aria-hidden="true"><path d="M1 4.5 9.5 9.6v4.8L1 19.5l2.4-7.5z" fill="#55535f"/><path d="M7.5 8.6 12.5 6.8v10.4l-5-1.8z" fill="#6c6a78"/><ellipse cx="25" cy="12" rx="14" ry="9.5" fill="#8a8898" stroke="#2a2931" stroke-width="1"/><circle cx="26" cy="12" r="5.6" fill="#ffc94d"/><path d="M24.50 12.00L21.80 12.00A4.2 4.2 0 0 1 23.90 8.36L25.25 10.70A1.5 1.5 0 0 0 24.50 12.00ZM26.75 10.70L28.10 8.36A4.2 4.2 0 0 1 30.20 12.00L27.50 12.00A1.5 1.5 0 0 0 26.75 10.70ZM26.75 13.30L28.10 15.64A4.2 4.2 0 0 1 23.90 15.64L25.25 13.30A1.5 1.5 0 0 0 26.75 13.30Z" fill="#2a2931"/><circle cx="26" cy="12" r="0.9" fill="#2a2931"/><ellipse cx="29" cy="6.6" rx="6.5" ry="1.7" fill="#fff" opacity="0.35"/><circle class="bomb-light" cx="37.6" cy="12" r="1.3" fill="#ff7a59"/></svg>
         </button>
         <span class="bubble" id="bubble" role="status" aria-live="polite"></span>
         <canvas id="life" tabindex="0" role="img" aria-label="Conway's Game of Life drawn as mosaic tiles. Click or drag to paint, double-click to drop a classic pattern, type to write letters."></canvas>
@@ -97,7 +101,6 @@
           <span class="dot" aria-hidden="true"></span>
           <span class="life-label" id="life-label">life.js</span>
           <span class="gen">gen <b id="gen">0</b> · pop <b id="pop">0</b></span>
-          <button type="button" class="nuke" id="nuke" aria-label="Nuke all life" title="nuke">☢️</button>
         </figcaption>
       </figure>
     </section>
@@ -358,6 +361,6 @@
   </footer>
 
   <canvas id="confetti" aria-hidden="true"></canvas>
-  <script src="main.js?v=0b37f115" defer></script>
+  <script src="main.js?v=65e9e32c" defer></script>
 </body>
 </html>

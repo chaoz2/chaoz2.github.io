@@ -459,7 +459,6 @@
       ctx.restore();
       if (t >= 1) finishNuke(ts);
     }
-    $("#nuke").addEventListener("click", detonate);
 
     // Tile sneezes a glider onto the board from its corner
     function sneeze() {
@@ -510,6 +509,50 @@
       buddy.classList.add("jump");
       if (Math.random() < 0.5 || lineIdx === 2) life.sneeze();
     });
+    // Tile throws the bomb: arc into the board, boom, brace, quip, new bomb
+    const bomb = $("#bomb");
+    const BOOM = {
+      en: ["kaboom!", "oops.", "worth it.", "…did I do that?", "nuclear option: used."],
+      zh: ["轰！", "哎呀。", "值了。", "……是我干的吗？", "终极手段：已使用。"],
+    };
+    let flying = false, flight = null;
+    bomb.addEventListener("click", () => {
+      if (flying) return;
+      flying = true;
+      bubble.classList.remove("show");
+      const cv = $("#life");
+      const b = bomb.getBoundingClientRect(), c = cv.getBoundingClientRect();
+      const dx = c.left + c.width / 2 - (b.left + b.width / 2);
+      const dy = c.top + c.height / 2 - (b.top + b.height / 2);
+      buddy.classList.remove("throw");
+      void buddy.offsetWidth;
+      buddy.classList.add("throw");
+      const impact = () => {
+        bomb.classList.add("gone");
+        buddy.classList.add("brace");
+        life.detonate();
+        setTimeout(() => {
+          buddy.classList.remove("brace", "throw");
+          say(pick(BOOM[lang()]));
+          if (flight) { flight.cancel(); flight = null; }
+          bomb.classList.remove("gone");
+          bomb.classList.add("respawn");
+          setTimeout(() => { bomb.classList.remove("respawn"); flying = false; }, 520);
+        }, 1050);
+      };
+      if (reduceMotion || !bomb.animate) return impact();
+      flight = bomb.animate(
+        [
+          { transform: "translate(0, 0) rotate(0deg) scale(1)" },
+          { transform: `translate(${dx * 0.08}px, ${-46}px) rotate(-40deg) scale(1.1)`, offset: 0.18 },
+          { transform: `translate(${dx * 0.5}px, ${dy * 0.5 - 90}px) rotate(-220deg) scale(1.15)`, offset: 0.55 },
+          { transform: `translate(${dx}px, ${dy}px) rotate(-420deg) scale(0.55)` },
+        ],
+        { duration: 820, easing: "cubic-bezier(.42, 0, .62, 1)", fill: "forwards" }
+      );
+      flight.onfinish = impact;
+    });
+
     // a little hello shortly after load
     setTimeout(() => { lineIdx = 0; say(BUDDY_LINES[lang()][0]); }, 1600);
     langHooks.push(() => bubble.classList.contains("show") && lineIdx >= 0 && (bubble.textContent = BUDDY_LINES[lang()][lineIdx]));
