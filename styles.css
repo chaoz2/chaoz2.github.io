@@ -24,15 +24,17 @@
   --sky: #5cc0f5;
   --sand: #d8c9ad;
 
-  /* brand-inspired, softened to fit the palette */
-  --c-openai: #3cc49f;   /* ChatGPT green */
-  --c-rockset: #8a52f0;  /* Rockset violet (#6E2BD9, softened) */
-  --c-fb: #6f9bff;       /* Facebook blue */
-  --c-intel: #4fbcef;    /* Intel blue */
-  --c-cmu: #ef6b6f;      /* Carnegie red */
-  --c-sjtu: #4a76cf;     /* Jiao Tong blue (#0C4CA3, softened) */
-  --c-uw: #b09ae0;       /* Husky purple */
-  --c-hs: #9aa8c8;       /* 山大附中 blue, muted */
+  /* brand-inspired: companies in full color, schools as soft tints of their brand */
+  --c-openai: #34c39d;   /* ChatGPT green */
+  --c-rockset: #8a52f0;  /* Rockset violet */
+  --c-fb: #5b8dff;       /* Facebook blue */
+  --c-intel: #3db8ee;    /* Intel blue */
+  --tint: 42%;
+  --tint-base: var(--card);
+  --c-sjtu: color-mix(in srgb, #3d6fd0 var(--tint), var(--tint-base));   /* Jiao Tong blue */
+  --c-cmu: color-mix(in srgb, #e0434b var(--tint), var(--tint-base));    /* Carnegie red */
+  --c-uw: color-mix(in srgb, #7b5bd0 var(--tint), var(--tint-base));     /* Husky purple */
+  --c-hs: color-mix(in srgb, #7c879f var(--tint), var(--tint-base));     /* 山大附中, neutral slate */
 
   --r-sm: 10px;
   --r: 18px;
@@ -64,14 +66,12 @@
     --lilac: #b79cff;
     --sky: #6fcbff;
     --sand: #8b7f6a;
-    --c-openai: #45d1ab;
+    --c-openai: #3fd2ab;
     --c-rockset: #9a66ff;
-    --c-fb: #7ea6ff;
-    --c-intel: #5cc6f5;
-    --c-cmu: #f47a7e;
-    --c-sjtu: #5a86dc;
-    --c-uw: #bba7ea;
-    --c-hs: #a8b5d4;
+    --c-fb: #6f9bff;
+    --c-intel: #4cc4f3;
+    --tint: 46%;
+    --tint-base: #4a4b55;
     color-scheme: dark;
   }
 }
@@ -94,14 +94,12 @@
   --lilac: #b79cff;
   --sky: #6fcbff;
   --sand: #8b7f6a;
-  --c-openai: #45d1ab;
+  --c-openai: #3fd2ab;
   --c-rockset: #9a66ff;
-  --c-fb: #7ea6ff;
-  --c-intel: #5cc6f5;
-  --c-cmu: #f47a7e;
-  --c-sjtu: #5a86dc;
-  --c-uw: #bba7ea;
-  --c-hs: #a8b5d4;
+  --c-fb: #6f9bff;
+  --c-intel: #4cc4f3;
+  --tint: 46%;
+  --tint-base: #4a4b55;
   color-scheme: dark;
 }
 
@@ -366,6 +364,8 @@ h2 { font-weight: 800; font-size: clamp(28px, 4vw, 42px); line-height: 1.12; mar
 .m.gap { background: var(--bg-2); }
 .m.logo { display: grid; place-items: center; }
 .m.logo svg { width: 62%; height: 62%; fill: #201f26; pointer-events: none; }
+.m.logo:is([data-k="sjtu"], [data-k="cmu"], [data-k="uw"], [data-k="hs"]) svg { fill: var(--ink); }
+.m.logo:is([data-k="sjtu"], [data-k="cmu"], [data-k="uw"], [data-k="hs"]) .mk { background: var(--ink); }
 .m.logo .mk { width: 64%; height: 64%; background: #201f26; pointer-events: none;
   -webkit-mask: var(--m) center / contain no-repeat; mask: var(--m) center / contain no-repeat; }
 .m.future { background: transparent; box-shadow: inset 0 0 0 1.5px var(--line); }
@@ -494,10 +494,10 @@ h2 { font-weight: 800; font-size: clamp(28px, 4vw, 42px); line-height: 1.12; mar
 .co-logo.sm svg { width: 19px; height: 19px; }
 .co-logo.sm.wide svg { width: 24px; height: 24px; }
 .co-logo.sm .mk { width: 21px; height: 21px; }
-.co-logo.cmu, .co-logo.sjtu, .co-logo[title="Rockset"] { color: #fff; }
+.co-logo[title="Rockset"] { color: #fff; }
+.edu .co-logo { color: var(--ink); }
 .co-logo.sm.cmu svg { width: 27px; height: 27px; }
-.m.logo[data-k="cmu"] svg { fill: #fff; width: 78%; height: 78%; }
-.m.logo[data-k="sjtu"] .mk { background: #fff; }
+.m.logo[data-k="cmu"] svg { width: 78%; height: 78%; }
 .m.logo[data-k="rockset"] svg { fill: #fff; }
 .chap-card:hover .co-logo { transform: rotate(-8deg) scale(1.06); }
 
