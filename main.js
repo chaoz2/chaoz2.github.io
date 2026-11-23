@@ -332,11 +332,11 @@
     cmu: { en: "Carnegie Mellon", zh: "卡内基梅隆", c: "--c-cmu" },
     uw: { en: "UW summer", zh: "华盛顿大学暑校", c: "--c-uw" },
     sjtu: { en: "SJTU", zh: "上海交大", c: "--c-sjtu" },
-    hs: { en: "High school", zh: "高中", c: "--c-hs" },
+    hs: { en: "High school", zh: "山大附中", c: "--c-hs" },
   };
   // later entries paint over earlier ones; every overlapping label still shows up in the tooltip
   const PERIODS = [
-    ["hs", "2013-01", "2013-08", "High school (physics) · The Affiliated High School of Shanxi University", "高中（物理）· 山西大学附属中学"],
+    ["hs", "2013-01", "2013-08", "High school (physics) · The Affiliated High School of Shanxi University", "山大附中（物理）"],
     ["sjtu", "2013-09", "2017-06", "B.S. Computer Science · Shanghai Jiao Tong University", "计算机科学学士 · 上海交通大学"],
     ["uw", "2015-06", "2015-08", "Summer session, Electrical Engineering · University of Washington", "暑期课程，电子工程 · 华盛顿大学"],
     ["intel", "2016-07", "2016-11", "Software Engineer · Intel, GPU virtualization (GVT-g)", "软件工程师 · Intel，GPU 虚拟化（GVT-g）"],
@@ -582,6 +582,328 @@
     }
     setTimeout(() => (copyBtn.innerHTML = copyHTML), 1800);
   });
+
+  /* ───────── a tiny, real-ish shell ───────── */
+  (() => {
+    const body = $("#term-body"), out = $("#term-out"), input = $("#term-in");
+    const promptEl = $("#term-prompt"), titleEl = $("#term-title");
+    const L = (v) => (typeof v === "function" ? v() : typeof v === "string" ? v : v[lang()]);
+    const dir = (children) => ({ dir: true, children });
+    const file = (content, url) => ({ dir: false, content, url });
+    const URLS = {
+      "learn-training": "https://learn-training.chaoz-ai.chatgpt.site",
+      "learn-interpretability": "https://learn-interpretability.chaoz-ai.chatgpt.site",
+      linkedin: "https://www.linkedin.com/in/chao-zhao",
+    };
+    const note = (en, zh) => dir({ note: file({ en, zh }) });
+
+    const FS = dir({
+      "README.md": file({
+        en: "hi, I'm chaoz. systems @ OpenAI.\ntry: ls · cd work · cat contact.txt · open learn-training · neofetch",
+        zh: "嗨，我是 chaoz，在 OpenAI 做系统。\n试试：ls · cd work · cat contact.txt · open learn-training · neofetch",
+      }),
+      likes: file({
+        en: "training runtimes · query optimizers\ndistributed KV stores · fast, boring infra",
+        zh: "训练运行时 · 查询优化器\n分布式 KV 存储 · 又快又“无聊”的基础设施",
+      }),
+      "contact.txt": file(() => `email     ${addr}\nlinkedin  linkedin.com/in/chao-zhao`),
+      work: dir({
+        "openai.md": file({
+          en: "OpenAI · 2024 – now\n- training runtime (research)\n- post-training systems (research)\n- online data (applied AI)",
+          zh: "OpenAI · 2024 – 至今\n- 训练运行时（研究）\n- 后训练系统（研究）\n- 在线数据（Applied AI）",
+        }),
+        "rockset.md": file({
+          en: "Rockset · 2021 – 2024 · acquired by OpenAI\n- staff SWE & TL, query optimizer\n- senior SWE, query performance\n- SWE, SQL optimizer",
+          zh: "Rockset · 2021 – 2024 · 被 OpenAI 收购\n- Staff 工程师 & TL，查询优化器\n- 高级工程师，查询性能\n- 工程师，SQL 优化器",
+        }),
+        "facebook.md": file({
+          en: "Facebook · 2018, 2019 – 2021\n- SWE, messaging infra\n- production engineer, ZippyDB\n- production engineer, verifiable log (summer 2018)",
+          zh: "Facebook · 2018，2019 – 2021\n- 软件工程师，消息基础设施\n- 生产工程师，ZippyDB\n- 生产工程师，Verifiable Log（2018 夏）",
+        }),
+        "intel.md": file({
+          en: "Intel · 2016\n- GVT-g GPU virtualization on Xen & KVM\n- landed in Linux 4.3-vgt",
+          zh: "Intel · 2016\n- GVT-g GPU 虚拟化，跑通 Xen 与 KVM\n- 并入 Linux 4.3-vgt",
+        }),
+      }),
+      chapters: dir({
+        shanxi: note("2010 – 2013 · The Affiliated High School of Shanxi University · physics", "2010 – 2013 · 山西大学附属中学 · 物理"),
+        shanghai: note("2013 – 2017 · SJTU, B.S. computer science\n2016 · Intel, GPU virtualization", "2013 – 2017 · 上海交大，计算机科学学士\n2016 · Intel，GPU 虚拟化"),
+        seattle: note("summer 2015 · University of Washington, electrical engineering", "2015 夏 · 华盛顿大学，电子工程"),
+        cmu: note("2017 – 2019 · Carnegie Mellon, M.S. computer systems", "2017 – 2019 · 卡内基梅隆，计算机系统硕士"),
+        "menlo-park": note("2018 – 2021 · Facebook: verifiable log → ZippyDB → messaging", "2018 – 2021 · Facebook：Verifiable Log → ZippyDB → 消息"),
+        "san-mateo": note("2021 – 2024 · Rockset: SQL optimizer → query performance → TL", "2021 – 2024 · Rockset：SQL 优化器 → 查询性能 → TL"),
+        "san-francisco": note("2024 – now · OpenAI: online data → post-training → training runtime", "2024 – 至今 · OpenAI：在线数据 → 后训练 → 训练运行时"),
+      }),
+      projects: dir({
+        "learn-training.url": file(URLS["learn-training"], URLS["learn-training"]),
+        "learn-interpretability.url": file(URLS["learn-interpretability"], URLS["learn-interpretability"]),
+      }),
+      ".zshrc": file("export LANG=en_US.UTF-8\nalias please=sudo\n# ↑↑↓↓←→←→BA"),
+    });
+
+    let cwd = [], prevCwd = [];
+    const hist = [];
+    let hIdx = 0, userTyped = false;
+
+    const pathStr = (parts) => "~/chaoz" + (parts.length ? "/" + parts.join("/") : "");
+    function resolve(p) {
+      if (!p) return cwd.slice();
+      let parts, s = p;
+      if (s === "~" || s.startsWith("~/")) {
+        parts = [];
+        s = s.slice(1).replace(/^\/chaoz(?=\/|$)/, "");
+      } else if (s.startsWith("/")) parts = [];
+      else parts = cwd.slice();
+      for (const seg of s.split("/")) {
+        if (!seg || seg === ".") continue;
+        if (seg === "..") parts.pop();
+        else parts.push(seg);
+      }
+      return parts;
+    }
+    function nodeAt(parts) {
+      let n = FS;
+      for (const seg of parts) {
+        if (!n.dir || !n.children[seg]) return null;
+        n = n.children[seg];
+      }
+      return n;
+    }
+
+    // output helpers: a line is a list of [text, className?] segments
+    function print(segs, cls) {
+      const div = document.createElement("div");
+      if (cls) div.className = cls;
+      (Array.isArray(segs) ? segs : [[segs]]).forEach(([text, c]) => {
+        const sp = document.createElement("span");
+        if (c) sp.className = c;
+        sp.textContent = text;
+        div.appendChild(sp);
+      });
+      out.appendChild(div);
+    }
+    const err = (msg) => print([[msg, "t-err"]]);
+    function promptSegs() {
+      return [[cwd.length ? cwd[cwd.length - 1] : "chaoz", "t-path"], [" $ ", "ps"]];
+    }
+    function renderPrompt() {
+      promptEl.innerHTML = "";
+      promptSegs().forEach(([t, c]) => {
+        const sp = document.createElement("span");
+        sp.className = c;
+        sp.textContent = t;
+        promptEl.appendChild(sp);
+      });
+      titleEl.textContent = pathStr(cwd) + " — zsh";
+    }
+    const scrollDown = () => (body.scrollTop = body.scrollHeight);
+
+    function listing(n, showAll) {
+      return Object.keys(n.children)
+        .filter((k) => showAll || !k.startsWith("."))
+        .sort()
+        .map((k) => [n.children[k].dir ? k + "/" : k, n.children[k].dir ? "t-dir" : ""]);
+    }
+
+    const CMDS = {
+      help() {
+        print("ls  cd  pwd  cat  tree  open  echo  whoami  history  clear  neofetch  theme  lang  date");
+      },
+      ls(args) {
+        const flags = args.filter((a) => a.startsWith("-")).join("");
+        const targets = args.filter((a) => !a.startsWith("-"));
+        const all = flags.includes("a"), long = flags.includes("l");
+        (targets.length ? targets : [""]).forEach((t) => {
+          const n = nodeAt(resolve(t));
+          if (!n) return err(`ls: ${t}: No such file or directory`);
+          if (targets.length > 1) print(t + ":", "t-dim");
+          if (!n.dir) return print(t);
+          const items = listing(n, all);
+          if (long) items.forEach(([name, c]) => print([[c ? "drwxr-xr-x  " : "-rw-r--r--  ", "t-dim"], ["chaoz  ", "t-dim"], [name, c]]));
+          else if (items.length) print(items.map(([name, c], i) => [name + (i < items.length - 1 ? "  " : ""), c]));
+        });
+      },
+      cd(args) {
+        const t = args[0];
+        if (t === "-") { [cwd, prevCwd] = [prevCwd, cwd]; return; }
+        const parts = t ? resolve(t) : [];
+        const n = nodeAt(parts);
+        if (!n) return err(`cd: no such file or directory: ${t}`);
+        if (!n.dir) return err(`cd: not a directory: ${t}`);
+        prevCwd = cwd;
+        cwd = parts;
+      },
+      pwd() { print(pathStr(cwd)); },
+      cat(args) {
+        if (!args.length) return err("cat: missing file operand");
+        args.forEach((t) => {
+          const n = nodeAt(resolve(t));
+          if (!n) return err(`cat: ${t}: No such file or directory`);
+          if (n.dir) return err(`cat: ${t}: Is a directory`);
+          L(n.content).split("\n").forEach((l) => print(l));
+        });
+      },
+      tree(args) {
+        const start = nodeAt(resolve(args[0]));
+        if (!start || !start.dir) return err(`tree: ${args[0] || "."}: not a directory`);
+        print([[args[0] || ".", "t-dir"]]);
+        let dirs = 0, files = 0;
+        (function walk(n, prefix) {
+          const keys = Object.keys(n.children).filter((k) => !k.startsWith(".")).sort();
+          keys.forEach((k, i) => {
+            const last = i === keys.length - 1, c = n.children[k];
+            print([[prefix + (last ? "└── " : "├── "), "t-dim"], [k, c.dir ? "t-dir" : ""]]);
+            if (c.dir) { dirs++; walk(c, prefix + (last ? "    " : "│   ")); } else files++;
+          });
+        })(start, "");
+        print(`\n${dirs} directories, ${files} files`, "t-dim");
+      },
+      open(args) {
+        const t = (args[0] || "").replace(/\.url$/, "").replace(/^.*\//, "");
+        let url = URLS[t];
+        if (!url && /^(mail|email|contact)/.test(t)) url = "mailto:" + addr;
+        if (!url && args[0]) {
+          const n = nodeAt(resolve(args[0]));
+          if (n && n.url) url = n.url;
+        }
+        if (!url) return err(`open: ${args[0] || "?"}: try learn-training, learn-interpretability, linkedin or email`);
+        print([["opening ", "t-dim"], [url, "t-link"]]);
+        window.open(url, url.startsWith("mailto:") ? "_self" : "_blank", "noopener");
+      },
+      echo(args, raw) {
+        const env = { LANG: "en_US.UTF-8  zh_CN.UTF-8", USER: "chaoz", HOME: "~/chaoz", SHELL: "/bin/zsh", PWD: pathStr(cwd) };
+        print(raw.replace(/^echo\s*/, "").replace(/\$(\w+)/g, (_, k) => env[k] ?? "").replace(/^["']|["']$/g, ""));
+      },
+      whoami() { print("chaoz"); },
+      hostname() { print("tiles"); },
+      date() { print(new Date().toString()); },
+      uname(args) { print(args.includes("-a") ? "TileOS tiles 1.0.0 mosaic-arm64 vanilla-js" : "TileOS"); },
+      history() { hist.forEach((h, i) => print([[String(i + 1).padStart(4) + "  ", "t-dim"], [h]])); },
+      clear() { out.innerHTML = ""; },
+      neofetch() {
+        const logo = [
+          [["██", "c-coral"], ["██", "c-butter"]],
+          [["██", "c-peri"], ["██", "c-mint"]],
+        ];
+        const info = [
+          [["chaoz", "t-link"], ["@", "t-dim"], ["tiles", "t-link"]],
+          [["-----------", "t-dim"]],
+          [["os      ", "t-dim"], ["TileOS 1.0"]],
+          [["role    ", "t-dim"], ["systems @ OpenAI"]],
+          [["stack   ", "t-dim"], ["runtimes · databases · RL infra"]],
+          [["langs   ", "t-dim"], ["en · zh"]],
+          [["shell   ", "t-dim"], ["zsh (ish)"]],
+        ];
+        info.forEach((row, i) => {
+          const l = logo[i] || [["    "]];
+          print([...l, ["   "], ...row]);
+        });
+      },
+      theme() { $("#theme-toggle").click(); print(`theme → ${isDark() ? "dark" : "light"}`, "t-dim"); },
+      lang() { $("#lang-toggle").click(); print(`lang → ${lang()}`, "t-dim"); },
+      sudo() { err("chaoz is not in the sudoers file. This incident will be reported."); },
+      rm() { err("rm: read-only file system (nice try)"); },
+      exit() { print("there is no exit. only tiles."); },
+      ping() { print("pong"); },
+      git() { print("everything up-to-date ✨"); },
+      man() { print("no manual entry. try help."); },
+    };
+    ["mkdir", "touch", "mv", "cp"].forEach((c) => (CMDS[c] = () => err(`${c}: read-only file system`)));
+    ["vim", "vi", "nvim", "emacs", "nano"].forEach((c) => (CMDS[c] = () => print(`${c}: you'd never get out. try cat.`)));
+    CMDS.logout = CMDS.exit;
+    CMDS.please = CMDS.sudo;
+    CMDS.ll = (args) => CMDS.ls(["-la", ...args]);
+
+    function run(raw, record) {
+      const line = raw.trim();
+      print([...promptSegs(), [line]], "t-cmd");
+      if (line) {
+        if (record) hist.push(line);
+        const [cmd, ...args] = line.split(/\s+/);
+        const fn = CMDS[cmd];
+        if (fn) fn(args, line);
+        else err(`zsh: command not found: ${cmd}`);
+      }
+      renderPrompt();
+      scrollDown();
+    }
+
+    function boot() {
+      out.innerHTML = "";
+      cwd = [];
+      ["whoami", "cat likes", "echo $LANG", "ls ~/chapters"].forEach((c) => run(c, false));
+      body.scrollTop = 0;
+    }
+
+    function complete() {
+      const v = input.value;
+      const parts = v.split(/\s+/);
+      const last = parts[parts.length - 1];
+      let cands = [], base = "";
+      if (parts.length === 1) {
+        cands = Object.keys(CMDS).filter((c) => c.startsWith(last));
+      } else {
+        const slash = last.lastIndexOf("/");
+        base = slash >= 0 ? last.slice(0, slash + 1) : "";
+        const frag = slash >= 0 ? last.slice(slash + 1) : last;
+        const n = nodeAt(resolve(base || ""));
+        if (n && n.dir) {
+          cands = Object.keys(n.children)
+            .filter((k) => k.startsWith(frag) && (frag.startsWith(".") || !k.startsWith(".")))
+            .map((k) => k + (n.children[k].dir ? "/" : ""));
+        }
+      }
+      if (!cands.length) return;
+      if (cands.length === 1) {
+        parts[parts.length - 1] = base + cands[0] + (parts.length === 1 ? " " : "");
+        input.value = parts.join(" ");
+        return;
+      }
+      let pre = cands[0];
+      cands.forEach((c) => { while (!c.startsWith(pre)) pre = pre.slice(0, -1); });
+      const cur = parts.length === 1 ? last : last.slice(base.length);
+      if (pre.length > cur.length) {
+        parts[parts.length - 1] = base + pre;
+        input.value = parts.join(" ");
+      } else {
+        print([...promptSegs(), [v]], "t-cmd");
+        print(cands.map((c, i) => [c + (i < cands.length - 1 ? "  " : ""), c.endsWith("/") ? "t-dir" : ""]));
+        scrollDown();
+      }
+    }
+
+    input.addEventListener("keydown", (e) => {
+      e.stopPropagation(); // keep typing out of the page-level easter eggs
+      if (e.key === "Enter") {
+        userTyped = true;
+        const v = input.value;
+        input.value = "";
+        input.placeholder = "";
+        run(v, true);
+        hIdx = hist.length;
+      } else if (e.key === "Tab") {
+        e.preventDefault();
+        complete();
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        if (hIdx > 0) input.value = hist[--hIdx];
+      } else if (e.key === "ArrowDown") {
+        e.preventDefault();
+        hIdx = Math.min(hist.length, hIdx + 1);
+        input.value = hist[hIdx] || "";
+      } else if (e.key === "l" && e.ctrlKey) {
+        e.preventDefault();
+        CMDS.clear();
+      }
+    });
+    body.addEventListener("click", () => {
+      if (!String(window.getSelection() || "")) input.focus({ preventScroll: true });
+    });
+
+    renderPrompt();
+    boot();
+    langHooks.push(() => { if (!userTyped) boot(); });
+  })();
 
   /* ───────── konami → tile confetti ───────── */
   const KONAMI = ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight", "b", "a"];

@@ -145,138 +145,90 @@
         </div>
       </header>
 
-      <div class="jobs">
-        <article class="job" style="--c: var(--c-openai)">
-          <header class="job-head">
-            <span class="job-tile" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
-            <div>
-              <h3>OpenAI</h3>
-              <p class="job-meta"><span class="en">Member of Technical Staff · Jun 2024 – now · SF Bay Area</span><span class="zh">技术团队成员（MTS）· 2024.06 – 至今 · 旧金山湾区</span></p>
+      <ol class="story">
+        <li class="chap" style="--c: var(--c-openai)">
+          <span class="chap-years">2024 – <span class="en">now</span><span class="zh">至今</span></span>
+          <details class="chap-card">
+            <summary>
+              <span class="chap-top">
+                <span class="job-tile" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+                <b>OpenAI</b>
+                <span class="chap-place"><span class="en">San Francisco</span><span class="zh">旧金山</span></span>
+                <span class="chap-plus" aria-hidden="true"></span>
+              </span>
+              <span class="chap-line"><span class="en">Started in online data, then moved down the stack to training runtimes.</span><span class="zh">从在线数据起步，一路往下做到训练运行时。</span></span>
+              <span class="teams"><span class="team-chip"><b><span class="en">Online Data</span><span class="zh">在线数据</span></b><small><span class="en">analytics DB · RAG</span><span class="zh">分析数据库 · RAG</span></small></span><span class="arrow" aria-hidden="true">→</span><span class="team-chip"><b><span class="en">Post-Training</span><span class="zh">后训练系统</span></b><small><span class="en">synthetic data · inference</span><span class="zh">合成数据 · 推理</span></small></span><span class="arrow" aria-hidden="true">→</span><span class="team-chip"><b><span class="en">Training Runtime</span><span class="zh">训练运行时</span></b><small><span class="en">pre-training · async RL</span><span class="zh">预训练 · 异步 RL</span></small></span></span>
+            </summary>
+            <div class="chap-more">
+              <div class="r"><span class="r-when"><span class="en">Sep 2025 – now</span><span class="zh">2025.09 – 至今</span></span><div><b><span class="en">Training Runtime · Research</span><span class="zh">训练运行时 · 研究</span></b><p><span class="en">GPT Astra pre-training, async RL runtime, scaling pre-training via Stargate.</span><span class="zh">GPT Astra 预训练、异步 RL 运行时，借助 Stargate 扩展预训练。</span></p></div></div>
+              <div class="r"><span class="r-when"><span class="en">Mar – Jun 2025</span><span class="zh">2025.03 – 06</span></span><div><b><span class="en">Post-Training Systems · Research</span><span class="zh">后训练系统 · 研究</span></b><p><span class="en">Synthetic data generation and inference throughput.</span><span class="zh">合成数据生成与推理吞吐。</span></p></div></div>
+              <div class="r"><span class="r-when"><span class="en">Jun 2024 – Sep 2025</span><span class="zh">2024.06 – 2025.09</span></span><div><b><span class="en">Online Data · Applied AI</span><span class="zh">在线数据 · Applied AI</span></b><p><span class="en">Led the Integrity Counter Service and its query compiler. Built ChatGPT file RAG on Rockset hybrid search.</span><span class="zh">主导 Integrity Counter Service 及其查询编译器；用 Rockset 混合检索搭 ChatGPT 文件 RAG。</span></p></div></div>
             </div>
-          </header>
-          <div class="role">
-            <h4><span class="en">Training Runtime</span><span class="zh">训练运行时</span> <span class="team"><span class="en">Research</span><span class="zh">研究</span></span></h4>
-            <p class="when"><span class="en">Sep 2025 – now</span><span class="zh">2025.09 – 至今</span></p>
-            <ul>
-              <li><span class="en">GPT Astra pre-training system.</span><span class="zh">GPT Astra 预训练系统。</span></li>
-              <li><span class="en">Async RL system runtime.</span><span class="zh">异步 RL 系统运行时。</span></li>
-              <li><span class="en">Scaling up pre-training for RSI via Stargate.</span><span class="zh">借助 Stargate 扩展面向 RSI 的预训练。</span></li>
-            </ul>
-          </div>
-          <div class="role">
-            <h4><span class="en">Post-Training Systems</span><span class="zh">后训练系统</span> <span class="team"><span class="en">Research</span><span class="zh">研究</span></span></h4>
-            <p class="when"><span class="en">Mar 2025 – Jun 2025</span><span class="zh">2025.03 – 2025.06</span></p>
-            <ul>
-              <li><span class="en">Synthetic data generation and inference throughput.</span><span class="zh">合成数据生成与推理吞吐。</span></li>
-            </ul>
-          </div>
-          <div class="role">
-            <h4><span class="en">Online Data</span><span class="zh">在线数据</span> <span class="team">Applied AI</span></h4>
-            <p class="when"><span class="en">Jun 2024 – Sep 2025</span><span class="zh">2024.06 – 2025.09</span></p>
-            <ul>
-              <li>
-                <span class="en"><strong>Online Analytics DB:</strong> led the Integrity Counter Service, new query compiler included. Abuse prevention at 800M+ WAU.</span>
-                <span class="zh"><strong>在线分析数据库：</strong>主导 Integrity Counter Service（含全新查询编译器），支撑 8 亿+ 周活的反滥用。</span>
-              </li>
-              <li>
-                <span class="en"><strong>ChatGPT RAG:</strong> file upload → ChatGPT backend → Rockset hybrid search.</span>
-                <span class="zh"><strong>ChatGPT RAG：</strong>文件上传 → ChatGPT 后端 → Rockset 混合检索。</span>
-              </li>
-            </ul>
-          </div>
-        </article>
+          </details>
+        </li>
 
-        <p class="merge">
-          <span class="merge-tiles" aria-hidden="true"><i></i><i></i><i></i></span>
-          <a href="https://openai.com/index/openai-acquires-rockset/" target="_blank" rel="noopener"><span class="en">Rockset was acquired by OpenAI ↗</span><span class="zh">Rockset 被 OpenAI 收购 ↗</span></a>
-        </p>
-
-        <article class="job" style="--c: var(--c-rockset)">
-          <header class="job-head">
-            <span class="job-tile" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
-            <div>
-              <h3>Rockset</h3>
-              <p class="job-meta"><span class="en">Real-time search &amp; analytics DB · Jun 2021 – Jun 2024 · San Mateo, CA</span><span class="zh">实时搜索与分析数据库 · 2021.06 – 2024.06 · 加州圣马特奥</span></p>
+        <li class="chap" style="--c: var(--c-rockset)">
+          <span class="chap-years">2021 – 2024</span>
+          <details class="chap-card">
+            <summary>
+              <span class="chap-top">
+                <span class="job-tile" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+                <b>Rockset</b>
+                <span class="chap-place"><span class="en">San Mateo</span><span class="zh">圣马特奥</span></span>
+                <span class="chap-plus" aria-hidden="true"></span>
+              </span>
+              <span class="chap-line"><span class="en">Taught a SQL engine to choose its own query plans. Then OpenAI bought the company.</span><span class="zh">教 SQL 引擎自己挑查询计划。后来公司被 OpenAI 收购。</span></span>
+              <span class="teams"><span class="team-chip"><b><span class="en">SQL Optimizer</span><span class="zh">SQL 优化器</span></b><small><span class="en">cost-based optimizer</span><span class="zh">代价优化器</span></small></span><span class="arrow" aria-hidden="true">→</span><span class="team-chip"><b><span class="en">Query Performance</span><span class="zh">查询性能</span></b><small><span class="en">search vs. Elasticsearch</span><span class="zh">搜索性能</span></small></span><span class="arrow" aria-hidden="true">→</span><span class="team-chip"><b><span class="en">Query Optimizer · TL</span><span class="zh">查询优化器 · TL</span></b><small><span class="en">self-learning optimizer</span><span class="zh">自学习优化器</span></small></span></span>
+            </summary>
+            <div class="chap-more">
+              <div class="r"><span class="r-when">2023 – 2024</span><div><b><span class="en">Staff Engineer &amp; TL · Query Optimizer</span><span class="zh">Staff 工程师 &amp; TL · 查询优化器</span></b><p><span class="en">A self-learning optimizer, faster search and joins. Helped land Whatnot and Klarna.</span><span class="zh">自学习优化器，更快的搜索与 Join，助力拿下 Whatnot 与 Klarna。</span></p></div></div>
+              <div class="r"><span class="r-when">2022 – 2023</span><div><b><span class="en">Senior Engineer · Query Performance</span><span class="zh">高级工程师 · 查询性能</span></b><p><span class="en">Search performance, benchmarked against Elasticsearch.</span><span class="zh">搜索性能优化，对标 Elasticsearch。</span></p></div></div>
+              <div class="r"><span class="r-when">2021 – 2022</span><div><b><span class="en">Engineer · SQL Optimizer</span><span class="zh">工程师 · SQL 优化器</span></b><p><span class="en">Shipped the cost-based optimizer: index for search, scan for analytics.</span><span class="zh">交付代价优化器：搜索走索引，分析走扫描。</span></p></div></div>
+              <a class="r-link" href="https://openai.com/index/openai-acquires-rockset/" target="_blank" rel="noopener"><span class="en">OpenAI acquires Rockset ↗</span><span class="zh">OpenAI 收购 Rockset ↗</span></a>
             </div>
-          </header>
-          <div class="role">
-            <h4><span class="en">Staff Software Engineer &amp; TL</span><span class="zh">Staff 软件工程师 &amp; 技术负责人</span> <span class="team"><span class="en">Query Optimizer</span><span class="zh">查询优化器</span></span></h4>
-            <p class="when"><span class="en">May 2023 – Jun 2024</span><span class="zh">2023.05 – 2024.06</span></p>
-            <ul>
-                            <li><span class="en">Self-learning cost-based optimizer, driven by telemetry.</span><span class="zh">遥测驱动的自学习代价优化器。</span></li>
-              <li><span class="en">Faster hybrid search and joins through smarter indexing.</span><span class="zh">更聪明的索引，更快的混合搜索与 Join。</span></li>
-              <li><span class="en">Helped land Whatnot and Klarna.</span><span class="zh">助力拿下 Whatnot 与 Klarna。</span></li>
-            </ul>
-          </div>
-          <div class="role">
-            <h4><span class="en">Senior Software Engineer</span><span class="zh">高级软件工程师</span> <span class="team"><span class="en">Query Performance</span><span class="zh">查询性能</span></span></h4>
-            <p class="when"><span class="en">Jun 2022 – May 2023</span><span class="zh">2022.06 – 2023.05</span></p>
-            <ul>
-              <li><span class="en">Search performance, benchmarked against Elasticsearch.</span><span class="zh">搜索性能优化，基准对标 Elasticsearch。</span></li>
-            </ul>
-          </div>
-          <div class="role">
-            <h4><span class="en">Software Engineer</span><span class="zh">软件工程师</span> <span class="team"><span class="en">SQL Optimizer</span><span class="zh">SQL 优化器</span></span></h4>
-            <p class="when"><span class="en">Jun 2021 – Jun 2022</span><span class="zh">2021.06 – 2022.06</span></p>
-            <ul>
-              <li><span class="en">Shipped the cost-based optimizer for access paths: index for search, scan for analytics.</span><span class="zh">交付访问路径代价优化器：搜索走索引，分析走扫描。</span></li>
-            </ul>
-          </div>
-        </article>
+          </details>
+        </li>
 
-        <article class="job" style="--c: var(--c-fb)">
-          <header class="job-head">
-            <span class="job-tile" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
-            <div>
-              <h3>Facebook</h3>
-              <p class="job-meta"><span class="en">Core infra · 2018, 2019 – 2021 · Menlo Park, CA</span><span class="zh">核心基础设施 · 2018，2019 – 2021 · 加州门洛帕克</span></p>
+        <li class="chap" style="--c: var(--c-fb)">
+          <span class="chap-years">2018 – 2021</span>
+          <details class="chap-card">
+            <summary>
+              <span class="chap-top">
+                <span class="job-tile" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+                <b>Facebook</b>
+                <span class="chap-place"><span class="en">Menlo Park</span><span class="zh">门洛帕克</span></span>
+                <span class="chap-plus" aria-hidden="true"></span>
+              </span>
+              <span class="chap-line"><span class="en">Kept a distributed Paxos key-value store and its backups boring, in the best way.</span><span class="zh">让分布式 Paxos 键值库和它的备份，稳得毫无波澜。</span></span>
+              <span class="teams"><span class="team-chip"><b><span class="en">Verifiable Log</span><span class="zh">Verifiable Log</span></b><small><span class="en">Merkle trees</span><span class="zh">Merkle 树</span></small></span><span class="arrow" aria-hidden="true">→</span><span class="team-chip"><b><span class="en">ZippyDB</span><span class="zh">ZippyDB</span></b><small><span class="en">Paxos KV · backups</span><span class="zh">Paxos KV · 备份</span></small></span><span class="arrow" aria-hidden="true">→</span><span class="team-chip"><b><span class="en">Messaging Infra</span><span class="zh">消息基础设施</span></b><small><span class="en">client sync · C++ coroutines</span><span class="zh">客户端同步 · C++ 协程</span></small></span></span>
+            </summary>
+            <div class="chap-more">
+              <div class="r"><span class="r-when">2020 – 2021</span><div><b><span class="en">Software Engineer · Messaging Infra</span><span class="zh">软件工程师 · 消息基础设施</span></b><p><span class="en">Real-time client DB sync, backend DB access, C++ coroutines.</span><span class="zh">客户端数据库实时同步、后端数据库访问、C++ 协程。</span></p></div></div>
+              <div class="r"><span class="r-when">2019 – 2020</span><div><b><span class="en">Production Engineer · ZippyDB</span><span class="zh">生产工程师 · ZippyDB</span></b><p><span class="en">A distributed Paxos KV store and its backup &amp; restore system.</span><span class="zh">分布式 Paxos KV 存储及其备份恢复系统。</span> <a href="https://engineering.fb.com/2021/08/06/core-infra/zippydb/" target="_blank" rel="noopener">ZippyDB ↗</a></p></div></div>
+              <div class="r"><span class="r-when"><span class="en">Summer 2018</span><span class="zh">2018 夏</span></span><div><b><span class="en">Production Engineer · Verifiable Log</span><span class="zh">生产工程师 · Verifiable Log</span></b><p><span class="en">A tamper-proof log on Merkle trees, and a C++ library for Certificate Transparency.</span><span class="zh">基于 Merkle 树的防篡改日志，以及证书透明度（Certificate Transparency）C++ 库。</span></p></div></div>
             </div>
-          </header>
-          <div class="role">
-            <h4><span class="en">Software Engineer</span><span class="zh">软件工程师</span> <span class="team"><span class="en">Messaging Infra</span><span class="zh">消息基础设施</span></span></h4>
-            <p class="when"><span class="en">Jul 2020 – Jun 2021</span><span class="zh">2020.07 – 2021.06</span></p>
-            <ul>
-              <li><span class="en">Real-time syncing for the client-side database.</span><span class="zh">客户端数据库的实时同步。</span></li>
-              <li><span class="en">Backend database access optimizations.</span><span class="zh">后端数据库访问优化。</span></li>
-              <li><span class="en">Moved backend code onto C++ coroutines.</span><span class="zh">将后端代码迁移到 C++ 协程。</span></li>
-            </ul>
-          </div>
-          <div class="role">
-            <h4><span class="en">Production Engineer</span><span class="zh">生产工程师</span> <span class="team">ZippyDB</span></h4>
-            <p class="when"><span class="en">Jan 2019 – Jul 2020</span><span class="zh">2019.01 – 2020.07</span></p>
-            <ul>
-              <li><a href="https://engineering.fb.com/2021/08/06/core-infra/zippydb/" target="_blank" rel="noopener">ZippyDB ↗</a><span class="en">, Facebook's distributed Paxos key-value store.</span><span class="zh">：Facebook 的分布式 Paxos 键值数据库。</span></li>
-              <li><span class="en">Distributed DB backup and restore system.</span><span class="zh">分布式数据库备份与恢复系统。</span></li>
-            </ul>
-          </div>
-          <div class="role">
-            <h4><span class="en">Production Engineer</span><span class="zh">生产工程师</span> <span class="team"><span class="en">Summer 2018</span><span class="zh">2018 夏</span></span></h4>
-            <p class="when"><span class="en">May 2018 – Aug 2018</span><span class="zh">2018.05 – 2018.08</span></p>
-            <ul>
-              <li><span class="en">Verifiable Log: tamper-proof, on Merkle trees.</span><span class="zh">Verifiable Log：基于 Merkle 树的防篡改日志。</span></li>
-              <li><span class="en">C++ library for </span><span class="zh">C++ 库，用于 </span><a href="https://certificate.transparency.dev/" target="_blank" rel="noopener">Certificate Transparency ↗</a><span class="zh">（CA 证书透明度）</span><span class="en">.</span><span class="zh">。</span></li>
-            </ul>
-          </div>
-        </article>
+          </details>
+        </li>
 
-        <article class="job" style="--c: var(--c-intel)">
-          <header class="job-head">
-            <span class="job-tile" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
-            <div>
-              <h3>Intel</h3>
-              <p class="job-meta"><span class="en">Open Source Technology Center · Jul – Nov 2016 · Shanghai</span><span class="zh">开源技术中心 · 2016.07 – 2016.11 · 上海闵行</span></p>
+        <li class="chap" style="--c: var(--c-intel)">
+          <span class="chap-years">2016</span>
+          <details class="chap-card">
+            <summary>
+              <span class="chap-top">
+                <span class="job-tile" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+                <b>Intel</b>
+                <span class="chap-place"><span class="en">Shanghai</span><span class="zh">上海</span></span>
+                <span class="chap-plus" aria-hidden="true"></span>
+              </span>
+              <span class="chap-line"><span class="en">Kernel code that lets virtual machines share one GPU.</span><span class="zh">写内核代码，让多台虚拟机共享一块 GPU。</span></span>
+              <span class="teams"><span class="team-chip"><b><span class="en">GVT-g</span><span class="zh">GVT-g</span></b><small><span class="en">GPU virtualization</span><span class="zh">GPU 虚拟化</span></small></span></span>
+            </summary>
+            <div class="chap-more">
+              <div class="r"><span class="r-when"><span class="en">Jul – Nov 2016</span><span class="zh">2016.07 – 11</span></span><div><b><span class="en">Software Engineer · GPU Virtualization</span><span class="zh">软件工程师 · GPU 虚拟化</span></b><p><span class="en">GVT-g i915 on Xen &amp; KVM for Kaby Lake. Landed in Linux 4.3-vgt.</span><span class="zh">在 Kaby Lake 上让 GVT-g i915 跑通 Xen 与 KVM，并入 Linux 4.3-vgt。</span></p></div></div>
             </div>
-          </header>
-          <div class="role">
-            <h4><span class="en">Software Engineer</span><span class="zh">软件工程师</span> <span class="team"><span class="en">GPU Virtualization (GVT-g)</span><span class="zh">GPU 虚拟化（GVT-g）</span></span></h4>
-            <p class="when"><span class="en">Jul 2016 – Nov 2016</span><span class="zh">2016.07 – 2016.11</span></p>
-            <ul>
-              <li><span class="en">GVT-g i915 GPU virtualization on Xen &amp; KVM for Kaby Lake.</span><span class="zh">在 Kaby Lake 上让 GVT-g i915 跑通 Xen 与 KVM。</span></li>
-              <li><span class="en">Landed in Linux 4.3-vgt (2017).</span><span class="zh">并入 Linux 4.3-vgt（2017）。</span></li>
-            </ul>
-          </div>
-        </article>
-      </div>
+          </details>
+        </li>
+      </ol>
     </section>
 
     <!-- ───────── PROJECTS ───────── -->
@@ -344,30 +296,15 @@
       </header>
 
       <div class="about-grid">
-        <div class="term">
-          <div class="term-bar" aria-hidden="true"><i></i><i></i><i></i><span>~/chao — zsh</span></div>
-<pre class="en"><span class="ps">$</span> whoami
-chao zhao, systems engineer, SF Bay Area
-<span class="ps">$</span> cat ./likes
-training runtimes · query optimizers
-distributed KV stores · fast, boring infra
-<span class="ps">$</span> echo $LANG
-en_US.UTF-8  zh_CN.UTF-8
-<span class="ps">$</span> ls ~/chapters
-shanxi/  shanghai/  seattle/  cmu/
-menlo-park/  san-mateo/  san-francisco/
-<span class="ps">$</span> <span class="cursor" aria-hidden="true"></span></pre>
-<pre class="zh"><span class="ps">$</span> whoami
-chao zhao，系统工程师，旧金山湾区
-<span class="ps">$</span> cat ./likes
-训练运行时 · 查询优化器
-分布式 KV 存储 · 又快又“无聊”的基础设施
-<span class="ps">$</span> echo $LANG
-en_US.UTF-8  zh_CN.UTF-8
-<span class="ps">$</span> ls ~/chapters
-山西/  上海/  西雅图/  cmu/
-门洛帕克/  圣马特奥/  旧金山/
-<span class="ps">$</span> <span class="cursor" aria-hidden="true"></span></pre>
+        <div class="term" id="term">
+          <div class="term-bar" aria-hidden="true"><i></i><i></i><i></i><span id="term-title">~/chaoz — zsh</span></div>
+          <div class="term-body" id="term-body">
+            <div class="term-out" id="term-out" role="log" aria-live="polite"></div>
+            <label class="term-line">
+              <span class="term-prompt" id="term-prompt"></span>
+              <input id="term-in" type="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="go" aria-label="Terminal input. Type help for commands." placeholder="help">
+            </label>
+          </div>
         </div>
 
         <div class="about-side">

@@ -197,7 +197,7 @@ strong { font-weight: 650; color: var(--ink); }
 .kicker-tiles i:nth-child(3) { background: var(--mint); animation-delay: 0.3s; }
 @keyframes hop { 0%, 60%, 100% { transform: none; } 30% { transform: translateY(-4px); } }
 
-.name { margin: 0 0 28px; display: grid; gap: clamp(7px, 1.2vw, 12px); width: min(100%, 500px); cursor: pointer; }
+.name { margin: 0 0 32px; display: grid; gap: clamp(18px, 3.2vw, 34px); width: min(100%, 500px); cursor: pointer; }
 .tilefont { display: grid; grid-template-columns: repeat(var(--cols, 23), 1fr); gap: clamp(2.5px, 0.45vw, 4.5px); }
 .t { aspect-ratio: 1; border-radius: 28%; transition: transform 0.25s cubic-bezier(.3, 1.6, .5, 1), background-color 0.3s ease; }
 .t.on {
@@ -401,41 +401,81 @@ h2 { font-weight: 800; font-size: clamp(28px, 4vw, 42px); line-height: 1.12; mar
 .tip b::before { content: ""; width: 10px; height: 10px; border-radius: 3px; background: var(--c, var(--ink-3)); }
 .tip[hidden] { display: none; }
 
-/* ───────── WORK ───────── */
-.jobs { display: grid; gap: 22px; max-width: 880px; }
-.job {
-  background: var(--card); border: 1px solid var(--line); border-radius: var(--r-lg);
-  box-shadow: var(--shadow); padding: clamp(20px, 3.4vw, 32px);
+/* ───────── WORK (story cards) ───────── */
+.story { list-style: none; margin: 0; padding: 0; display: grid; gap: 18px; max-width: 920px; position: relative; }
+.story::before {
+  content: ""; position: absolute; left: 107px; top: 26px; bottom: 26px; width: 2px;
+  background: repeating-linear-gradient(to bottom, var(--line) 0 6px, transparent 6px 12px);
+}
+.chap { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 28px; align-items: start; position: relative; }
+.chap-years { padding-top: 22px; text-align: right; font-family: var(--mono); font-size: 13px; color: var(--ink-3); white-space: nowrap; position: relative; }
+.chap-years::after {
+  content: ""; position: absolute; right: -19px; top: 26px; width: 12px; height: 12px; border-radius: 4px;
+  background: var(--c); box-shadow: 0 0 0 4px var(--bg);
+}
+.chap-card {
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--r-lg); box-shadow: var(--shadow);
   transition: transform 0.3s cubic-bezier(.3, 1.4, .5, 1), box-shadow 0.3s;
 }
-.job:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
-.job-head { display: flex; gap: 16px; align-items: center; margin-bottom: 6px; }
-.job-tile { flex: none; display: grid; grid-template-columns: repeat(2, 18px); gap: 3px; }
-.job-tile i { width: 18px; height: 18px; border-radius: 6px; background: var(--c); transition: transform 0.4s cubic-bezier(.3, 1.6, .5, 1); }
+.chap-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+.chap-card summary { list-style: none; cursor: pointer; padding: 20px 24px 22px; display: block; border-radius: var(--r-lg); }
+.chap-card summary::-webkit-details-marker { display: none; }
+.chap-top { display: flex; align-items: center; gap: 12px; }
+.chap-top b { font-weight: 800; font-size: 22px; letter-spacing: -0.02em; }
+.chap-place { font-size: 13px; color: var(--ink-3); }
+.chap-plus {
+  margin-left: auto; width: 30px; height: 30px; border-radius: 10px; flex: none; position: relative;
+  background: color-mix(in srgb, var(--c) 16%, transparent); transition: transform 0.35s cubic-bezier(.3, 1.6, .5, 1), background-color 0.2s;
+}
+.chap-plus::before, .chap-plus::after {
+  content: ""; position: absolute; left: 50%; top: 50%; width: 12px; height: 2.5px; border-radius: 2px;
+  background: color-mix(in srgb, var(--c) 70%, var(--ink)); transform: translate(-50%, -50%);
+}
+.chap-plus::after { transform: translate(-50%, -50%) rotate(90deg); }
+.chap-card summary:hover .chap-plus { background: color-mix(in srgb, var(--c) 30%, transparent); }
+.chap-card[open] .chap-plus { transform: rotate(135deg); }
+.chap-line { display: block; font-size: 18px; font-weight: 600; line-height: 1.45; margin: 12px 0 16px; letter-spacing: -0.01em; max-width: 40em; }
+:root[data-lang="zh"] .chap-line { letter-spacing: 0; }
+
+.teams { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.team-chip {
+  display: inline-flex; flex-direction: column; gap: 1px; padding: 7px 12px 8px; border-radius: 14px;
+  background: color-mix(in srgb, var(--c) 13%, var(--card)); border: 1px solid color-mix(in srgb, var(--c) 28%, transparent);
+  transition: transform 0.3s cubic-bezier(.3, 1.6, .5, 1);
+}
+.team-chip:hover { transform: translateY(-2px) rotate(-1.5deg); }
+.team-chip b { font-size: 13.5px; font-weight: 700; color: color-mix(in srgb, var(--c) 45%, var(--ink)); line-height: 1.3; }
+.team-chip small { font-size: 12px; color: var(--ink-3); line-height: 1.3; }
+.teams .arrow { color: var(--ink-3); font-size: 14px; }
+.team-chip:last-child { box-shadow: 0 0 0 2px color-mix(in srgb, var(--c) 40%, transparent); }
+
+.chap-more { padding: 4px 24px 22px; display: grid; gap: 14px; animation: unfold 0.35s ease-out; }
+.chap-more::before { content: ""; height: 1px; background: var(--line); margin-bottom: 4px; }
+@keyframes unfold { from { opacity: 0; transform: translateY(-6px); } }
+.r { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 4px 18px; }
+.r-when { font-family: var(--mono); font-size: 12.5px; color: var(--ink-3); padding-top: 2px; }
+.r b { font-weight: 650; font-size: 15.5px; }
+.r p { margin: 2px 0 0; color: var(--ink-2); font-size: 15px; }
+.r-link { font-size: 14px; font-weight: 600; justify-self: start; }
+
+.job-tile { flex: none; display: grid; grid-template-columns: repeat(2, 13px); gap: 2.5px; }
+.job-tile i { width: 13px; height: 13px; border-radius: 4.5px; background: var(--c); transition: transform 0.4s cubic-bezier(.3, 1.6, .5, 1); }
 .job-tile i:nth-child(2) { opacity: 0.55; }
 .job-tile i:nth-child(3) { opacity: 0.3; }
 .job-tile i:nth-child(4) { opacity: 0.8; }
-.job:hover .job-tile i:nth-child(1) { transform: translate(-2px, -2px) rotate(-10deg); }
-.job:hover .job-tile i:nth-child(4) { transform: translate(2px, 2px) rotate(10deg); }
-.job h3 { font-weight: 800; font-size: 26px; line-height: 1.15; margin: 0; letter-spacing: -0.02em; }
-.job-meta { margin: 2px 0 0; font-size: 14px; color: var(--ink-3); }
-.role { border-top: 1px solid var(--line); padding-top: 18px; margin-top: 18px; }
-.role h4 { margin: 0; font-size: 17.5px; font-weight: 700; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; letter-spacing: -0.01em; }
-.team {
-  font-size: 12.5px; font-weight: 600; padding: 2px 10px; border-radius: 999px;
-  background: color-mix(in srgb, var(--c) 18%, transparent); color: color-mix(in srgb, var(--c) 55%, var(--ink));
-}
-.when { margin: 2px 0 8px; font-family: var(--mono); font-size: 12.5px; color: var(--ink-3); }
-.role ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 7px; }
-.role li { position: relative; padding-left: 20px; color: var(--ink-2); font-size: 16px; }
-.role li::before { content: ""; position: absolute; left: 2px; top: 0.6em; width: 8px; height: 8px; border-radius: 3px; background: var(--c); }
+.chap-card:hover .job-tile i:nth-child(1) { transform: translate(-2px, -2px) rotate(-10deg); }
+.chap-card:hover .job-tile i:nth-child(4) { transform: translate(2px, 2px) rotate(10deg); }
 
-.merge { margin: -4px 0; display: flex; align-items: center; gap: 12px; font-size: 14px; color: var(--ink-2); padding-left: 30px; }
-.merge-tiles { display: flex; flex-direction: column; gap: 3px; }
-.merge-tiles i { width: 8px; height: 8px; border-radius: 3px; }
-.merge-tiles i:nth-child(1) { background: var(--c-openai); }
-.merge-tiles i:nth-child(2) { background: color-mix(in srgb, var(--c-rockset) 50%, var(--c-openai)); }
-.merge-tiles i:nth-child(3) { background: var(--c-rockset); }
+@media (max-width: 720px) {
+  .story::before { display: none; }
+  .chap { grid-template-columns: 1fr; gap: 6px; }
+  .chap-years { text-align: left; padding: 0 0 0 4px; }
+  .chap-years::after { display: none; }
+  .chap-card summary { padding: 18px 18px 20px; }
+  .chap-more { padding: 4px 18px 20px; }
+  .r { grid-template-columns: 1fr; }
+  .teams .arrow { display: none; }
+}
 
 /* ───────── PROJECTS ───────── */
 .projects { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; max-width: 880px; }
@@ -504,10 +544,27 @@ h2 { font-weight: 800; font-size: clamp(28px, 4vw, 42px); line-height: 1.12; mar
 .term-bar i:nth-child(2) { background: #ffc94d; }
 .term-bar i:nth-child(3) { background: #2ec4a0; }
 .term-bar span { margin-left: 8px; }
-.term pre { margin: 0; padding: 18px 20px 22px; font-family: var(--mono); font-size: 14px; line-height: 1.75; white-space: pre-wrap; word-break: break-word; }
 .ps { color: #ffc94d; }
-.cursor { display: inline-block; width: 9px; height: 17px; background: #3fd2ae; vertical-align: -3px; border-radius: 2px; animation: cur 1.05s steps(1) infinite; }
-@keyframes cur { 50% { opacity: 0; } }
+.term-body {
+  padding: 16px 20px 18px; font-family: var(--mono); font-size: 14px; line-height: 1.7;
+  height: 340px; overflow-y: auto; cursor: text; scrollbar-width: thin; scrollbar-color: #3a3a44 transparent;
+}
+.term-out > div { white-space: pre-wrap; word-break: break-word; min-height: 1.7em; }
+.term-line { display: flex; align-items: center; cursor: text; }
+.term-prompt { white-space: pre; }
+#term-in {
+  flex: 1; min-width: 0; padding: 0; border: 0; outline: none; background: transparent;
+  color: #ece8e1; font: inherit; caret-color: #3fd2ae;
+}
+#term-in::placeholder { color: #55535f; }
+.t-path { color: #6fcbff; }
+.t-dir { color: #7f9bff; font-weight: 500; }
+.t-err { color: #ff8a6b; }
+.t-dim { color: #8c8996; }
+.t-link { color: #3fd2ae; }
+.c-coral { color: #ff7a59; } .c-butter { color: #ffc94d; } .c-peri { color: #6c8cff; } .c-mint { color: #2ec4a0; }
+.term:focus-within { box-shadow: var(--shadow-lg), 0 0 0 3px color-mix(in srgb, var(--mint) 35%, transparent); }
+@media (max-width: 600px) { .term-body { font-size: 13px; height: 320px; } #term-in { font-size: 16px; } }
 
 .mini { font-size: 13px; font-weight: 700; color: var(--ink-3); margin: 0 0 12px; letter-spacing: 0.06em; text-transform: uppercase; }
 :root[data-lang="zh"] .mini { letter-spacing: 0.1em; }
