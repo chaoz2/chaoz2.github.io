@@ -1,0 +1,425 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Chao Zhao · Systems @ OpenAI</title>
+  <meta name="description" content="Chao Zhao builds training runtimes, databases and the plumbing under large models. Systems @ OpenAI, previously Rockset, Facebook and Intel.">
+  <meta property="og:title" content="Chao Zhao · Systems @ OpenAI">
+  <meta property="og:description" content="Training runtimes, query optimizers, distributed KV stores, rendered in tiles.">
+  <meta name="theme-color" content="#f7f4ee" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#131418" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='7' height='7' rx='1.6' fill='%23ff7a59'/%3E%3Crect x='9' width='7' height='7' rx='1.6' fill='%23ffc94d'/%3E%3Crect y='9' width='7' height='7' rx='1.6' fill='%236c8cff'/%3E%3Crect x='9' y='9' width='7' height='7' rx='1.6' fill='%232ec4a0'/%3E%3C/svg%3E">
+  <script>
+    (function () {
+      var d = document.documentElement, t = null, l = null;
+      try { t = localStorage.getItem('theme'); l = localStorage.getItem('lang'); } catch (e) {}
+      if (t) d.dataset.theme = t;
+      if (!l) l = /^zh/i.test(navigator.language || '') ? 'zh' : 'en';
+      d.dataset.lang = l;
+      d.lang = l === 'zh' ? 'zh-CN' : 'en';
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;500;700&family=Pixelify+Sans:wght@500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip" href="#main"><span class="en">Skip to content</span><span class="zh">跳到正文</span></a>
+
+  <header class="nav">
+    <div class="wrap nav-inner">
+      <a class="logo" href="#top" aria-label="chaoz.com">
+        <span class="logo-tiles" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+        <span>chaoz</span>
+      </a>
+      <nav aria-label="Sections">
+        <a href="#months"><span class="en">timeline</span><span class="zh">时间线</span></a>
+        <a href="#work"><span class="en">work</span><span class="zh">工作</span></a>
+        <a href="#projects"><span class="en">projects</span><span class="zh">作品</span></a>
+        <a href="#about"><span class="en">about</span><span class="zh">关于</span></a>
+        <a href="#contact"><span class="en">contact</span><span class="zh">联系</span></a>
+      </nav>
+      <div class="nav-btns">
+        <button class="icon-btn lang-btn" type="button" id="lang-toggle" aria-label="切换到中文 / Switch to English">
+          <span class="en" aria-hidden="true">中</span><span class="zh" aria-hidden="true">EN</span>
+        </button>
+        <button class="icon-btn" type="button" id="theme-toggle" aria-label="Toggle light / dark mode">
+          <svg class="i-moon" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 1h4v1H6zM4 2h2v1H4zM3 3h1v1H3zM2 4h1v2H2zM1 6h1v4H1zM2 10h1v2H2zM3 12h1v1H3zM4 13h2v1H4zM6 14h4v1H6zM10 13h2v1h-2zM12 12h1v1h-1zM13 10h1v2h-1zM12 9h1v1h-1zM10 10h2v-1h-2zM8 9h2v1H8zM7 8h1v1H7zM6 6h1v2H6zM6 4h1v2H6zM7 3h1v1H7z" fill="currentColor"/></svg>
+          <svg class="i-sun" viewBox="0 0 16 16" aria-hidden="true"><path d="M7 0h2v2H7zM7 14h2v2H7zM0 7h2v2H0zM14 7h2v2h-2zM2 2h2v2H2zM12 2h2v2h-2zM2 12h2v2H2zM12 12h2v2h-2zM6 4h4v1H6zM5 5h6v6H5zM6 11h4v1H6zM4 6h1v4H4zM11 6h1v4h-1z" fill="currentColor"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- ───────── HERO ───────── -->
+    <section class="hero wrap" id="top">
+      <div class="hero-text">
+        <p class="kicker">
+          <span class="kicker-tiles" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span class="en">hello, world</span>
+          <span class="zh">你好，世界</span>
+        </p>
+        <h1 class="name" aria-label="Chao Zhao">
+          <span class="tilefont" data-text="CHAO" aria-hidden="true"></span>
+          <span class="tilefont" data-text="ZHAO" aria-hidden="true"></span>
+        </h1>
+        <p class="lede">
+          <span class="en">Systems @ OpenAI. Runtimes, databases and the plumbing under large models.</span>
+          <span class="zh">OpenAI 系统工程师。做大模型脚下的运行时、数据库和管道。</span>
+        </p>
+        <p class="now">
+          <span class="now-label">now</span>
+          <button class="redact" type="button" aria-pressed="false">
+            <span class="en">scaling pre-training &amp; async RL runtimes</span>
+            <span class="zh">扩展预训练与异步 RL 运行时</span>
+          </button>
+        </p>
+        <div class="hero-links">
+          <a class="btn" href="#work"><span class="en">Work</span><span class="zh">工作</span> <span aria-hidden="true">↓</span></a>
+          <a class="btn soft" href="https://www.linkedin.com/in/chao-zhao" target="_blank" rel="noopener">LinkedIn <span aria-hidden="true">↗</span></a>
+        </div>
+      </div>
+
+      <figure class="life-card">
+        <button class="buddy" type="button" id="buddy" aria-label="Say hi to Tile, the mosaic mascot">
+          <span class="buddy-body" aria-hidden="true"></span>
+          <span class="eye l" aria-hidden="true"><i></i></span>
+          <span class="eye r" aria-hidden="true"><i></i></span>
+          <span class="cheek l" aria-hidden="true"></span>
+          <span class="cheek r" aria-hidden="true"></span>
+        </button>
+        <span class="bubble" id="bubble" role="status" aria-live="polite"></span>
+        <canvas id="life" role="img" aria-label="Conway's Game of Life drawn as mosaic tiles. Click or drag to paint new cells."></canvas>
+        <figcaption>
+          <span class="dot" aria-hidden="true"></span>
+          <span>life.js</span>
+          <span class="gen">gen <b id="gen">0</b></span>
+        </figcaption>
+      </figure>
+    </section>
+
+    <!-- ───────── STATS ───────── -->
+    <section class="stats wrap" aria-label="Quick stats">
+      <div class="stat" style="--c: var(--mint)">
+        <b>800M+</b>
+        <span class="en">weekly users, kept safe</span>
+        <span class="zh">周活用户的反滥用</span>
+      </div>
+      <div class="stat" style="--c: var(--peri)">
+        <b>4</b>
+        <span class="en">companies, one acquisition</span>
+        <span class="zh">家公司，一次收购</span>
+      </div>
+      <div class="stat" style="--c: var(--coral)">
+        <b id="stat-months">160</b>
+        <span class="en">months, one tile each</span>
+        <span class="zh">个月，一月一块</span>
+      </div>
+    </section>
+
+    <!-- ───────── MONTHS ───────── -->
+    <section class="section wrap" id="months">
+      <header class="sec-head">
+        <span class="sec-num" style="--c: var(--butter)">01</span>
+        <div>
+          <h2><span class="en">2013 → now</span><span class="zh">2013 → 现在</span></h2>
+        </div>
+      </header>
+      <div class="months-layout">
+        <div class="months" id="months-grid" role="img" aria-label="A grid of months from 2013 to today, colored by school or employer: high school, Shanghai Jiao Tong University, University of Washington summer session, Intel, Carnegie Mellon, Facebook, Rockset and OpenAI."></div>
+        <ul class="legend" id="legend"></ul>
+      </div>
+      <div class="tip" id="tip" role="tooltip" hidden></div>
+    </section>
+
+    <!-- ───────── WORK ───────── -->
+    <section class="section wrap" id="work">
+      <header class="sec-head">
+        <span class="sec-num" style="--c: var(--mint)">02</span>
+        <div>
+          <h2><span class="en">Work log</span><span class="zh">工作日志</span></h2>
+        </div>
+      </header>
+
+      <div class="jobs">
+        <article class="job" style="--c: var(--c-openai)">
+          <header class="job-head">
+            <span class="job-tile" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+            <div>
+              <h3>OpenAI</h3>
+              <p class="job-meta"><span class="en">Member of Technical Staff · Jun 2024 – now · SF Bay Area</span><span class="zh">技术团队成员（MTS）· 2024.06 – 至今 · 旧金山湾区</span></p>
+            </div>
+          </header>
+          <div class="role">
+            <h4><span class="en">Training Runtime</span><span class="zh">训练运行时</span> <span class="team"><span class="en">Research</span><span class="zh">研究</span></span></h4>
+            <p class="when"><span class="en">Sep 2025 – now</span><span class="zh">2025.09 – 至今</span></p>
+            <ul>
+              <li><span class="en">GPT Astra pre-training system.</span><span class="zh">GPT Astra 预训练系统。</span></li>
+              <li><span class="en">Async RL system runtime.</span><span class="zh">异步 RL 系统运行时。</span></li>
+              <li><span class="en">Scaling up pre-training for RSI via Stargate.</span><span class="zh">借助 Stargate 扩展面向 RSI 的预训练。</span></li>
+            </ul>
+          </div>
+          <div class="role">
+            <h4><span class="en">Post-Training Systems</span><span class="zh">后训练系统</span> <span class="team"><span class="en">Research</span><span class="zh">研究</span></span></h4>
+            <p class="when"><span class="en">Mar 2025 – Jun 2025</span><span class="zh">2025.03 – 2025.06</span></p>
+            <ul>
+              <li><span class="en">Synthetic data generation and inference throughput.</span><span class="zh">合成数据生成与推理吞吐。</span></li>
+            </ul>
+          </div>
+          <div class="role">
+            <h4><span class="en">Online Data</span><span class="zh">在线数据</span> <span class="team">Applied AI</span></h4>
+            <p class="when"><span class="en">Jun 2024 – Sep 2025</span><span class="zh">2024.06 – 2025.09</span></p>
+            <ul>
+              <li>
+                <span class="en"><strong>Online Analytics DB:</strong> led the Integrity Counter Service, new query compiler included. Abuse prevention at 800M+ WAU.</span>
+                <span class="zh"><strong>在线分析数据库：</strong>主导 Integrity Counter Service（含全新查询编译器），支撑 8 亿+ 周活的反滥用。</span>
+              </li>
+              <li>
+                <span class="en"><strong>ChatGPT RAG:</strong> file upload → ChatGPT backend → Rockset hybrid search.</span>
+                <span class="zh"><strong>ChatGPT RAG：</strong>文件上传 → ChatGPT 后端 → Rockset 混合检索。</span>
+              </li>
+            </ul>
+          </div>
+        </article>
+
+        <p class="merge">
+          <span class="merge-tiles" aria-hidden="true"><i></i><i></i><i></i></span>
+          <a href="https://openai.com/index/openai-acquires-rockset/" target="_blank" rel="noopener"><span class="en">Rockset was acquired by OpenAI ↗</span><span class="zh">Rockset 被 OpenAI 收购 ↗</span></a>
+        </p>
+
+        <article class="job" style="--c: var(--c-rockset)">
+          <header class="job-head">
+            <span class="job-tile" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+            <div>
+              <h3>Rockset</h3>
+              <p class="job-meta"><span class="en">Real-time search &amp; analytics DB · Jun 2021 – Jun 2024 · San Mateo, CA</span><span class="zh">实时搜索与分析数据库 · 2021.06 – 2024.06 · 加州圣马特奥</span></p>
+            </div>
+          </header>
+          <div class="role">
+            <h4><span class="en">Staff Software Engineer &amp; TL</span><span class="zh">Staff 软件工程师 &amp; 技术负责人</span> <span class="team"><span class="en">Query Optimizer</span><span class="zh">查询优化器</span></span></h4>
+            <p class="when"><span class="en">May 2023 – Jun 2024</span><span class="zh">2023.05 – 2024.06</span></p>
+            <ul>
+                            <li><span class="en">Self-learning cost-based optimizer, driven by telemetry.</span><span class="zh">遥测驱动的自学习代价优化器。</span></li>
+              <li><span class="en">Faster hybrid search and joins through smarter indexing.</span><span class="zh">更聪明的索引，更快的混合搜索与 Join。</span></li>
+              <li><span class="en">Helped land Whatnot and Klarna.</span><span class="zh">助力拿下 Whatnot 与 Klarna。</span></li>
+            </ul>
+          </div>
+          <div class="role">
+            <h4><span class="en">Senior Software Engineer</span><span class="zh">高级软件工程师</span> <span class="team"><span class="en">Query Performance</span><span class="zh">查询性能</span></span></h4>
+            <p class="when"><span class="en">Jun 2022 – May 2023</span><span class="zh">2022.06 – 2023.05</span></p>
+            <ul>
+              <li><span class="en">Search performance, benchmarked against Elasticsearch.</span><span class="zh">搜索性能优化，基准对标 Elasticsearch。</span></li>
+            </ul>
+          </div>
+          <div class="role">
+            <h4><span class="en">Software Engineer</span><span class="zh">软件工程师</span> <span class="team"><span class="en">SQL Optimizer</span><span class="zh">SQL 优化器</span></span></h4>
+            <p class="when"><span class="en">Jun 2021 – Jun 2022</span><span class="zh">2021.06 – 2022.06</span></p>
+            <ul>
+              <li><span class="en">Shipped the cost-based optimizer for access paths: index for search, scan for analytics.</span><span class="zh">交付访问路径代价优化器：搜索走索引，分析走扫描。</span></li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="job" style="--c: var(--c-fb)">
+          <header class="job-head">
+            <span class="job-tile" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+            <div>
+              <h3>Facebook</h3>
+              <p class="job-meta"><span class="en">Core infra · 2018, 2019 – 2021 · Menlo Park, CA</span><span class="zh">核心基础设施 · 2018，2019 – 2021 · 加州门洛帕克</span></p>
+            </div>
+          </header>
+          <div class="role">
+            <h4><span class="en">Software Engineer</span><span class="zh">软件工程师</span> <span class="team"><span class="en">Messaging Infra</span><span class="zh">消息基础设施</span></span></h4>
+            <p class="when"><span class="en">Jul 2020 – Jun 2021</span><span class="zh">2020.07 – 2021.06</span></p>
+            <ul>
+              <li><span class="en">Real-time syncing for the client-side database.</span><span class="zh">客户端数据库的实时同步。</span></li>
+              <li><span class="en">Backend database access optimizations.</span><span class="zh">后端数据库访问优化。</span></li>
+              <li><span class="en">Moved backend code onto C++ coroutines.</span><span class="zh">将后端代码迁移到 C++ 协程。</span></li>
+            </ul>
+          </div>
+          <div class="role">
+            <h4><span class="en">Production Engineer</span><span class="zh">生产工程师</span> <span class="team">ZippyDB</span></h4>
+            <p class="when"><span class="en">Jan 2019 – Jul 2020</span><span class="zh">2019.01 – 2020.07</span></p>
+            <ul>
+              <li><a href="https://engineering.fb.com/2021/08/06/core-infra/zippydb/" target="_blank" rel="noopener">ZippyDB ↗</a><span class="en">, Facebook's distributed Paxos key-value store.</span><span class="zh">：Facebook 的分布式 Paxos 键值数据库。</span></li>
+              <li><span class="en">Distributed DB backup and restore system.</span><span class="zh">分布式数据库备份与恢复系统。</span></li>
+            </ul>
+          </div>
+          <div class="role">
+            <h4><span class="en">Production Engineer</span><span class="zh">生产工程师</span> <span class="team"><span class="en">Summer 2018</span><span class="zh">2018 夏</span></span></h4>
+            <p class="when"><span class="en">May 2018 – Aug 2018</span><span class="zh">2018.05 – 2018.08</span></p>
+            <ul>
+              <li><span class="en">Verifiable Log: tamper-proof, on Merkle trees.</span><span class="zh">Verifiable Log：基于 Merkle 树的防篡改日志。</span></li>
+              <li><span class="en">C++ library for </span><span class="zh">C++ 库，用于 </span><a href="https://certificate.transparency.dev/" target="_blank" rel="noopener">Certificate Transparency ↗</a><span class="zh">（CA 证书透明度）</span><span class="en">.</span><span class="zh">。</span></li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="job" style="--c: var(--c-intel)">
+          <header class="job-head">
+            <span class="job-tile" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+            <div>
+              <h3>Intel</h3>
+              <p class="job-meta"><span class="en">Open Source Technology Center · Jul – Nov 2016 · Shanghai</span><span class="zh">开源技术中心 · 2016.07 – 2016.11 · 上海闵行</span></p>
+            </div>
+          </header>
+          <div class="role">
+            <h4><span class="en">Software Engineer</span><span class="zh">软件工程师</span> <span class="team"><span class="en">GPU Virtualization (GVT-g)</span><span class="zh">GPU 虚拟化（GVT-g）</span></span></h4>
+            <p class="when"><span class="en">Jul 2016 – Nov 2016</span><span class="zh">2016.07 – 2016.11</span></p>
+            <ul>
+              <li><span class="en">GVT-g i915 GPU virtualization on Xen &amp; KVM for Kaby Lake.</span><span class="zh">在 Kaby Lake 上让 GVT-g i915 跑通 Xen 与 KVM。</span></li>
+              <li><span class="en">Landed in Linux 4.3-vgt (2017).</span><span class="zh">并入 Linux 4.3-vgt（2017）。</span></li>
+            </ul>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- ───────── PROJECTS ───────── -->
+    <section class="section wrap" id="projects">
+      <header class="sec-head">
+        <span class="sec-num" style="--c: var(--lilac)">03</span>
+        <div>
+          <h2><span class="en">Built to learn</span><span class="zh">为学而造</span></h2>
+        </div>
+      </header>
+
+      <div class="projects">
+        <a class="proj" href="https://learn-training.chaoz-ai.chatgpt.site" target="_blank" rel="noopener" style="--c: var(--mint)" data-seed="7">
+          <span class="proj-art" aria-hidden="true"></span>
+          <span class="proj-body">
+            <span class="proj-tag"><span class="en">bilingual · 168 topics</span><span class="zh">中英双语 · 168 个主题</span></span>
+            <b>Learn Training</b>
+            <span class="proj-sub"><span class="en">From principles to training systems</span><span class="zh">从原理到训练系统</span></span>
+            <span class="proj-desc">
+              <span class="en">Gradients → training systems → RL.</span>
+              <span class="zh">梯度 → 训练系统 → 强化学习。</span>
+            </span>
+            <span class="proj-go"><span class="en">open</span><span class="zh">打开</span> ↗</span>
+          </span>
+        </a>
+        <a class="proj" href="https://learn-interpretability.chaoz-ai.chatgpt.site" target="_blank" rel="noopener" style="--c: var(--bubble)" data-seed="23">
+          <span class="proj-art" aria-hidden="true"></span>
+          <span class="proj-body">
+            <span class="proj-tag"><span class="en">guided tours · runnable labs</span><span class="zh">概念导览 · 可运行实验</span></span>
+            <b>Learn Interpretability</b>
+            <span class="proj-sub"><span class="en">From representations to causal mechanisms</span><span class="zh">从表征到因果机制</span></span>
+            <span class="proj-desc">
+              <span class="en">Probes → patching → circuits → SAEs.</span>
+              <span class="zh">探针 → 激活替换 → 电路 → 稀疏自编码器。</span>
+            </span>
+            <span class="proj-go"><span class="en">open</span><span class="zh">打开</span> ↗</span>
+          </span>
+        </a>
+      </div>
+
+      <div class="toy" id="latency">
+        <div class="toy-text">
+          <h3><span class="en">Beat my p99</span><span class="zh">打败我的 p99</span></h3>
+          <dl class="toy-stats">
+            <div><dt><span class="en">last</span><span class="zh">上次</span></dt><dd id="lat-last">–</dd></div>
+            <div><dt>p50</dt><dd id="lat-p50">–</dd></div>
+            <div><dt><span class="en">best</span><span class="zh">最佳</span></dt><dd id="lat-best">–</dd></div>
+          </dl>
+          <p class="toy-verdict" id="lat-verdict" aria-live="polite"></p>
+        </div>
+        <button type="button" class="toy-pad" id="lat-pad" data-state="idle">
+          <span class="pad-grid" aria-hidden="true"></span>
+          <span class="pad-label" id="lat-label"></span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ───────── ABOUT ───────── -->
+    <section class="section wrap" id="about">
+      <header class="sec-head">
+        <span class="sec-num" style="--c: var(--bubble)">04</span>
+        <div>
+          <h2><span class="en">About</span><span class="zh">关于</span></h2>
+        </div>
+      </header>
+
+      <div class="about-grid">
+        <div class="term">
+          <div class="term-bar" aria-hidden="true"><i></i><i></i><i></i><span>~/chao — zsh</span></div>
+<pre class="en"><span class="ps">$</span> whoami
+chao zhao, systems engineer, SF Bay Area
+<span class="ps">$</span> cat ./likes
+training runtimes · query optimizers
+distributed KV stores · fast, boring infra
+<span class="ps">$</span> echo $LANG
+en_US.UTF-8  zh_CN.UTF-8
+<span class="ps">$</span> ls ~/chapters
+shanxi/  shanghai/  seattle/  cmu/
+menlo-park/  san-mateo/  san-francisco/
+<span class="ps">$</span> <span class="cursor" aria-hidden="true"></span></pre>
+<pre class="zh"><span class="ps">$</span> whoami
+chao zhao，系统工程师，旧金山湾区
+<span class="ps">$</span> cat ./likes
+训练运行时 · 查询优化器
+分布式 KV 存储 · 又快又“无聊”的基础设施
+<span class="ps">$</span> echo $LANG
+en_US.UTF-8  zh_CN.UTF-8
+<span class="ps">$</span> ls ~/chapters
+山西/  上海/  西雅图/  cmu/
+门洛帕克/  圣马特奥/  旧金山/
+<span class="ps">$</span> <span class="cursor" aria-hidden="true"></span></pre>
+        </div>
+
+        <div class="about-side">
+          <h3 class="mini"><span class="en">Toolbox</span><span class="zh">工具箱</span></h3>
+          <ul class="tags">
+            <li style="--c: var(--mint)"><span class="en">pre-training systems</span><span class="zh">预训练系统</span></li>
+            <li style="--c: var(--mint)"><span class="en">async RL runtimes</span><span class="zh">异步 RL 运行时</span></li>
+            <li style="--c: var(--peri)"><span class="en">query compilers</span><span class="zh">查询编译器</span></li>
+            <li style="--c: var(--peri)"><span class="en">cost-based optimizers</span><span class="zh">代价优化器</span></li>
+            <li style="--c: var(--peri)"><span class="en">hybrid search</span><span class="zh">混合搜索</span></li>
+            <li style="--c: var(--coral)"><span class="en">Paxos KV stores</span><span class="zh">Paxos KV 存储</span></li>
+            <li style="--c: var(--coral)"><span class="en">backup &amp; restore</span><span class="zh">备份与恢复</span></li>
+            <li style="--c: var(--coral)"><span class="en">Merkle trees</span><span class="zh">Merkle 树</span></li>
+            <li style="--c: var(--coral)"><span class="en">C++ coroutines</span><span class="zh">C++ 协程</span></li>
+            <li style="--c: var(--butter)"><span class="en">GPU virtualization</span><span class="zh">GPU 虚拟化</span></li>
+            <li style="--c: var(--butter)"><span class="en">Linux kernel</span><span class="zh">Linux 内核</span></li>
+          </ul>
+
+          <h3 class="mini"><span class="en">School</span><span class="zh">学校</span></h3>
+          <ul class="edu">
+            <li style="--c: var(--c-cmu)"><b><span class="en">Carnegie Mellon University</span><span class="zh">卡内基梅隆大学</span></b><span><span class="en">M.S., Computer Systems · 2017 – 2019</span><span class="zh">计算机系统 硕士 · 2017 – 2019</span></span></li>
+            <li style="--c: var(--c-sjtu)"><b><span class="en">Shanghai Jiao Tong University</span><span class="zh">上海交通大学</span></b><span><span class="en">B.S., Computer Science · 2013 – 2017</span><span class="zh">计算机科学 学士 · 2013 – 2017</span></span></li>
+            <li style="--c: var(--c-uw)"><b><span class="en">University of Washington</span><span class="zh">华盛顿大学</span></b><span><span class="en">Summer session, Electrical Engineering · 2015</span><span class="zh">暑期课程，电子工程 · 2015</span></span></li>
+            <li style="--c: var(--c-hs)"><b><span class="en">The Affiliated High School of Shanxi University</span><span class="zh">山西大学附属中学</span></b><span><span class="en">High school, physics · 2010 – 2013</span><span class="zh">高中，物理 · 2010 – 2013</span></span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────── CONTACT ───────── -->
+    <section class="section wrap contact" id="contact">
+      <div class="contact-card">
+        <span class="confetti-deco" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></span>
+        <span class="sec-num" style="--c: var(--coral)">05</span>
+        <h2><span class="en">Say hi.</span><span class="zh">打个招呼。</span></h2>
+        <div class="hero-links">
+          <a class="btn" id="email" href="#contact">chaoz.ai [at] icloud.com</a>
+          <button class="btn soft" type="button" id="copy-email"><span class="en">copy email</span><span class="zh">复制邮箱</span></button>
+          <a class="btn soft" href="https://www.linkedin.com/in/chao-zhao" target="_blank" rel="noopener">LinkedIn <span aria-hidden="true">↗</span></a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot wrap">
+    <p>
+      © <span id="year">2026</span> Chao Zhao ·
+      <span class="en"><b class="tilecount">hundreds of</b> tiles</span>
+      <span class="zh"><b class="tilecount">几百</b> 块方块</span>
+    </p>
+  </footer>
+
+  <canvas id="confetti" aria-hidden="true"></canvas>
+  <script src="main.js" defer></script>
+</body>
+</html>
