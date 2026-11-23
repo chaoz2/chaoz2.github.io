@@ -7,15 +7,14 @@
   <meta name="description" content="Chao Zhao builds training runtimes, databases and the plumbing under large models. Systems @ OpenAI, previously Rockset, Facebook and Intel.">
   <meta property="og:title" content="Chao Zhao · Systems @ OpenAI">
   <meta property="og:description" content="Training runtimes, query optimizers, distributed KV stores, rendered in tiles.">
-  <meta name="theme-color" content="#f7f4ee" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#131418" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#131418">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='7' height='7' rx='1.6' fill='%23ff7a59'/%3E%3Crect x='9' width='7' height='7' rx='1.6' fill='%23ffc94d'/%3E%3Crect y='9' width='7' height='7' rx='1.6' fill='%236c8cff'/%3E%3Crect x='9' y='9' width='7' height='7' rx='1.6' fill='%232ec4a0'/%3E%3C/svg%3E">
   <script>
     (function () {
       var d = document.documentElement, t = null, l = null;
       try { t = localStorage.getItem('theme'); l = localStorage.getItem('lang'); } catch (e) {}
-      if (t) d.dataset.theme = t;
-      if (!l) l = /^zh/i.test(navigator.language || '') ? 'zh' : 'en';
+      d.dataset.theme = t === 'light' ? 'light' : 'dark';
+      if (l !== 'zh') l = 'en';
       d.dataset.lang = l;
       d.lang = l === 'zh' ? 'zh-CN' : 'en';
     })();
