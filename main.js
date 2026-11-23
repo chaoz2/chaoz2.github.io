@@ -184,7 +184,7 @@
     let cols = 0, rows = 0, W = 0, H = 0, ox = 0, oy = 0;
     let grid = new Uint8Array(0), age = new Uint16Array(0);
     let gen = 0, pop = 0, visible = true, last = 0, holdUntil = 0;
-    let nuke = null, quietUntil = 0, wasteland = false; // ☢
+    let nuke = null, manual = false; // once the visitor plays with the board, stop auto-seeding
     let hover = null; // {x, y} cell under the pointer
     const genEl = $("#gen"), popEl = $("#pop"), labelEl = $("#life-label");
     const AGE = ["butter", "coral", "bubble", "lilac", "peri", "mint"];
@@ -287,9 +287,8 @@
       }
       grid = next;
       gen++;
-      // keep it lively once it settles down (but let a fresh wasteland stay quiet for a bit)
-      if (performance.now() < quietUntil) return;
-      if (wasteland) { wasteland = false; if (pop < cols * rows * 0.05) toast("life finds a way 🌱"); }
+      // keep it lively for idle visitors; once someone plays with it, the board is theirs
+      if (manual) return;
       if (pop < cols * rows * 0.05 || gen % 400 === 0) {
         for (let k = 0; k < 3; k++) glider(Math.floor(Math.random() * cols), Math.floor(Math.random() * rows));
         for (let k = 0; k < 2; k++) splat(Math.floor(Math.random() * cols), Math.floor(Math.random() * rows), 3);
@@ -362,7 +361,7 @@
       for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) if (Math.random() < 0.7) set(c.x + dx, c.y + dy);
       draw();
     }
-    cv.addEventListener("pointerdown", (e) => { painting = true; cv.setPointerCapture(e.pointerId); paintAt(e); });
+    cv.addEventListener("pointerdown", (e) => { manual = true; if (nuke) finishNuke(performance.now()); painting = true; cv.setPointerCapture(e.pointerId); paintAt(e); });
     cv.addEventListener("pointermove", (e) => {
       const c = cellAt(e);
       const moved = !hover || !c || c.x !== hover.x || c.y !== hover.y;
@@ -377,6 +376,8 @@
     cv.addEventListener("dblclick", (e) => {
       const c = cellAt(e);
       if (!c) return;
+      manual = true;
+      if (nuke) finishNuke(performance.now());
       const [name, shape] = PATTERNS[patIdx];
       patIdx = (patIdx + 1) % PATTERNS.length;
       stamp(shape, c.x, c.y, true);
@@ -395,6 +396,8 @@
         const start = hover || { x: Math.floor(cols / 2) - 6, y: Math.floor(rows / 2) };
         pen = { x: start.x, y: start.y - 2, x0: start.x };
       }
+      manual = true;
+      if (nuke) finishNuke(performance.now());
       if (ch === " ") { e.preventDefault(); pen.x += 3; }
       else if (ch === "Enter") { pen.x = pen.x0; pen.y += 7; }
       else if (FONT[ch]) {
@@ -414,6 +417,7 @@
     const NUKE_MS = 750;
     function detonate() {
       if (!cols || nuke) return;
+      manual = true;
       const card = cv.closest(".life-card");
       card.classList.remove("shake");
       void card.offsetWidth;
@@ -427,8 +431,6 @@
       nuke = null;
       gen = 0;
       holdUntil = ts + 300;
-      quietUntil = performance.now() + 8000;
-      wasteland = true;
       toast("☢ wasteland");
       draw();
     }
