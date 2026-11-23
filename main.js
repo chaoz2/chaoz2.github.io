@@ -336,7 +336,7 @@
   };
   // later entries paint over earlier ones; every overlapping label still shows up in the tooltip
   const PERIODS = [
-    ["hs", "2013-01", "2013-08", "High school (physics) · The Affiliated High School of Shanxi University", "山大附中（物理）"],
+    ["hs", "2010-09", "2013-08", "High school (physics) · The Affiliated High School of Shanxi University", "山大附中（物理）"],
     ["sjtu", "2013-09", "2017-06", "B.S. Computer Science · Shanghai Jiao Tong University", "计算机科学学士 · 上海交通大学"],
     ["uw", "2015-06", "2015-08", "Summer session, Electrical Engineering · University of Washington", "暑期课程，电子工程 · 华盛顿大学"],
     ["intel", "2016-07", "2016-11", "Software Engineer · Intel, GPU virtualization (GVT-g)", "软件工程师 · Intel，GPU 虚拟化（GVT-g）"],
@@ -387,8 +387,8 @@
           const k = info.hits[info.hits.length - 1][0];
           el.dataset.k = k;
           el.style.setProperty("--c", `var(${KEYS[k].c})`);
-          counts[k] = (counts[k] || 0) + 1;
-          const startsHere = PERIODS.some((p) => p[0] === k && idx(p[1]) === i);
+          const firstVisible = startYear * 12;
+          const startsHere = PERIODS.some((p) => p[0] === k && (idx(p[1]) === i || (idx(p[1]) < firstVisible && i === firstVisible)));
           if (k !== prevKey && startsHere) {
             const svg = logoSvg(k);
             if (svg) { el.classList.add("logo"); el.appendChild(svg); }
@@ -408,6 +408,14 @@
       byYM[y * 12 + m] = el;
     }
   }
+  // legend durations: every month a chapter covers, even when another chapter is painted on top
+  Object.keys(KEYS).forEach((k) => {
+    const months = new Set();
+    PERIODS.filter((p) => p[0] === k).forEach((p) => {
+      for (let i = idx(p[1]); i <= Math.min(idx(p[2]), nowIdx); i++) months.add(i);
+    });
+    counts[k] = months.size;
+  });
   // pass 2: GitHub-style layout, years as columns (old → new, left → right), months as rows
   gridEl.style.setProperty("--ncols", endYear - startYear + 1);
   gfrag.appendChild(document.createElement("span"));
